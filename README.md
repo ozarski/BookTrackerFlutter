@@ -1,3 +1,3 @@
-# book_tracker
+# BookTracker
 
-A new Flutter project.
+Flutter project to remake ozarski/BookTracker in Flutter.
