@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:book_tracker/models/book.dart';
 import 'package:book_tracker/providers/book_list_model.dart';
 import 'package:flutter/material.dart';
-import 'book_list_item.dart';
+import '../widgets/book_list_item.dart';
 import 'package:provider/provider.dart';
 
 class BookListTab extends StatelessWidget {
