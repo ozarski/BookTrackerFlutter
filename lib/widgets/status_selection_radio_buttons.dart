@@ -13,7 +13,6 @@ class StatusSelectionRadioButtons extends StatefulWidget {
 
 class StatusSelectionRadioButtonsState
     extends State<StatusSelectionRadioButtons> {
-  BookStatus? _status = BookStatus.reading;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +20,7 @@ class StatusSelectionRadioButtonsState
       padding: const EdgeInsets.only(right: 25, left: 10),
       child: Consumer<NewBookModel>(
         builder: (context, newBookModel, child) {
+          BookStatus? status = newBookModel.book.status;
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -28,16 +28,16 @@ class StatusSelectionRadioButtonsState
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  setState(() => _status = BookStatus.reading);
+                  setState(() => status = BookStatus.reading);
                   newBookModel.setStatus(BookStatus.reading);
                 },
                 child: Row(
                   children: [
                     Radio<BookStatus>(
                         value: BookStatus.reading,
-                        groupValue: _status,
+                        groupValue: status,
                         onChanged: (status) {
-                          setState(() => _status = status);
+                          setState(() => status = status);
                           newBookModel.setStatus(status!);
                         }),
                     const Text(
@@ -51,16 +51,16 @@ class StatusSelectionRadioButtonsState
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  setState(() => _status = BookStatus.finished);
+                  setState(() => status = BookStatus.finished);
                   newBookModel.setStatus(BookStatus.finished);
                 },
                 child: Row(
                   children: [
                     Radio<BookStatus>(
                         value: BookStatus.finished,
-                        groupValue: _status,
+                        groupValue: status,
                         onChanged: (status) {
-                          setState(() => _status = status);
+                          setState(() => status = status);
                           newBookModel.setStatus(status!);
                         }),
                     const Text(
@@ -74,16 +74,16 @@ class StatusSelectionRadioButtonsState
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onTap: () {
-                  setState(() => _status = BookStatus.wantToRead);
+                  setState(() => status = BookStatus.wantToRead);
                   newBookModel.setStatus(BookStatus.wantToRead);
                 },
                 child: Row(
                   children: [
                     Radio<BookStatus>(
                         value: BookStatus.wantToRead,
-                        groupValue: _status,
+                        groupValue: status,
                         onChanged: (status) {
-                          setState(() => _status = status);
+                          setState(() => status = status);
                           newBookModel.setStatus(status!);
                         }),
                     const Text(

@@ -2,11 +2,7 @@ import 'package:book_tracker/models/book.dart';
 import 'package:flutter/material.dart';
 
 class NewBookModel extends ChangeNotifier {
-  final Book _book = Book(
-    title: '',
-    author: '',
-    pages: 0,
-  );
+  final Book _book = Book.addBookInit();
 
   Book get book => _book;
 
@@ -25,8 +21,18 @@ class NewBookModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setStartDate(DateTime startDate) {
+    _book.setStartDate(startDate);
+    notifyListeners();
+  }
+
+  void setFinishDate(DateTime finishDate) {
+    _book.setFinishDate(finishDate);
+    notifyListeners();
+  }
+
   void setStatus(BookStatus status) {
-    _book.status = status;
+    _book.setStatus(status);
     notifyListeners();
   }
 }
