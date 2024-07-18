@@ -10,6 +10,11 @@ class Book {
     required this.author,
     required this.pages,
   });
+
+  @override
+  String toString() {
+    return 'Book{title: $title, author: $author, pages: $pages, status: $status}';
+  }
 }
 
 enum BookStatus {

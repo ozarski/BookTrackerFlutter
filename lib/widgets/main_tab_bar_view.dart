@@ -1,4 +1,4 @@
-import 'package:book_tracker/book_list_tab.dart';
+import 'package:book_tracker/widgets/book_list_tab.dart';
 import 'package:flutter/material.dart';
 
 class MainTabBarView extends StatelessWidget {
