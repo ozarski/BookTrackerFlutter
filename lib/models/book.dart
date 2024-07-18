@@ -2,7 +2,7 @@ class Book {
   String title;
   String author;
   int pages;
-  BookStatus status = BookStatus.reading;
+  BookStatus? status = BookStatus.reading;
   DateTime? startDate;
   DateTime? finishDate;
 
@@ -10,6 +10,7 @@ class Book {
     required this.title,
     required this.author,
     required this.pages,
+    this.status,
     this.startDate,
     this.finishDate,
   });

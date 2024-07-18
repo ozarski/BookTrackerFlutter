@@ -21,15 +21,17 @@ class _NewBookDatesState extends State<NewBookDates> {
           return const Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            StartDatePickerWidget(),
-          ],);
+              StartDatePickerWidget(),
+            ],
+          );
         } else if (newBookModel.book.status == BookStatus.finished) {
           return const Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            StartDatePickerWidget(),
-            FinishDatePickerWidget(title: 'Finish date:'),
-          ],);
+              StartDatePickerWidget(),
+              FinishDatePickerWidget(),
+            ],
+          );
         }
         return Container();
       },
