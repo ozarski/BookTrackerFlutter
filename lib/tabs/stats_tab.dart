@@ -1,4 +1,5 @@
 import 'package:book_tracker/providers/book_list_model.dart';
+import 'package:book_tracker/utils/PaddingExtension.dart';
 import 'package:book_tracker/widgets/stat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,51 +14,60 @@ class StatsTab extends StatelessWidget {
         builder: (context, model, child) {
           var totalPages = model.books.fold(
               0, (previousValue, element) => previousValue + element.pages);
-          var totalBooks = model.books.length;
-          var pagesPerbook = totalBooks == 0 ? 0 : totalPages / totalBooks;
-          //TODO("replace placeholders with actual values")
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Padding(padding: EdgeInsets.only(top: 50)),
               StatWidget(
                 title: "total pages",
                 value: totalPages.toString(),
                 fontSize: 40.0,
-              ),
-              const Padding(padding: EdgeInsets.only(top: 50)),
+              ).addPadding(const EdgeInsets.symmetric(vertical: 50)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StatWidget(
-                          title: "total books", value: totalBooks.toString()),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 25)),
-                      const StatWidget(title: "pages per day", value: "42"),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 25)),
-                      const StatWidget(title: "books per month", value: "2.4"),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      StatWidget(
-                          title: "pages per book",
-                          value: pagesPerbook.toStringAsFixed(2)),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 25)),
-                      const StatWidget(title: "days per book", value: "12.7"),
-                      const Padding(padding: EdgeInsets.symmetric(vertical: 25)),
-                      const StatWidget(title: "books per week", value: "0.6"),
-                    ],
-                  ),
+                  statsLeftColumn(model),
+                  statsRightColumn(model),
                 ],
               ),
             ],
           );
         },
       ),
+    );
+  }
+
+  //TODO("replace placeholders with actual values")
+  Widget statsLeftColumn(BookListModel bookListModel) {
+    var totalBooks = bookListModel.books.length;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        StatWidget(title: "total books", value: totalBooks.toString())
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+        const StatWidget(title: "pages per day", value: "42")
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+        const StatWidget(title: "books per month", value: "2.4")
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+      ],
+    );
+  }
+
+  Widget statsRightColumn(BookListModel bookListModel) {
+    var totalBooks = bookListModel.books.length;
+    var totalPages = bookListModel.books
+        .fold(0, (previousValue, element) => previousValue + element.pages);
+    var pagesPerbook = totalBooks == 0 ? 0 : totalPages / totalBooks;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        StatWidget(
+                title: "pages per book", value: pagesPerbook.toStringAsFixed(2))
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+        const StatWidget(title: "days per book", value: "12.7")
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+        const StatWidget(title: "books per week", value: "0.6")
+            .addPadding(const EdgeInsets.only(bottom: 25)),
+      ],
     );
   }
 }

@@ -5,7 +5,7 @@ class StatWidget extends StatelessWidget {
       {super.key,
       required this.title,
       required this.value,
-      this.fontSize = 20.0});
+      this.fontSize = 25.0});
 
   final double fontSize;
   final String title;

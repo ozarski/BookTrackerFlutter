@@ -1,5 +1,6 @@
 import 'package:book_tracker/models/book.dart';
 import 'package:book_tracker/providers/new_book_model.dart';
+import 'package:book_tracker/utils/PaddingExtension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -14,9 +15,7 @@ class StartDatePickerWidget extends StatelessWidget {
         DateTime date = newBookModel.book.startDate ?? DateTime.now();
         var formattedDate = DateFormat('dd.MM.yyyy').format(date);
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: InkWell(
+        return InkWell(
             onTap: () async {
               DateTime? pickedDate = await setUpDatePicker(newBookModel, context);
               if (pickedDate != null) {
@@ -30,8 +29,7 @@ class StartDatePickerWidget extends StatelessWidget {
                 Text(formattedDate, style: const TextStyle(fontSize: 20)),
               ],
             ),
-          ),
-        );
+          ).addPadding(const EdgeInsets.symmetric(horizontal: 20, vertical: 10));
       },
     );
   }

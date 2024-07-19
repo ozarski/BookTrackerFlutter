@@ -5,6 +5,7 @@ class Book {
   BookStatus? status = BookStatus.reading;
   DateTime? startDate;
   DateTime? finishDate;
+  int progress = 0;
 
   Book({
     required this.title,
@@ -13,6 +14,7 @@ class Book {
     this.status,
     this.startDate,
     this.finishDate,
+    this.progress = 0,
   });
 
   void setStartDate(DateTime startDate) {
@@ -63,5 +65,19 @@ class Book {
 enum BookStatus {
   reading,
   finished,
-  wantToRead,
+  wantToRead;
+
+  @override
+  String toString(){
+    switch(this){
+      case BookStatus.reading:
+        return 'reading';
+      case BookStatus.finished:
+        return 'finished';
+      case BookStatus.wantToRead:
+        return 'want to read';
+      default:
+        return 'Unknown';
+    }
+  }
 }

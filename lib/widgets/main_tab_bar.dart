@@ -1,3 +1,4 @@
+import 'package:book_tracker/utils/PaddingExtension.dart';
 import 'package:flutter/material.dart';
 
 class MainTabBar extends StatelessWidget {
@@ -7,18 +8,16 @@ class MainTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: const TabBar(
+      child: TabBar(
           tabs: [
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Tab(icon: Icon(Icons.book_outlined))),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Tab(icon: Icon(Icons.bar_chart_outlined))),
+            const Tab(icon: Icon(Icons.book_outlined))
+                .addPadding(const EdgeInsets.symmetric(horizontal: 10)),
+            const Tab(icon: Icon(Icons.bar_chart_outlined))
+                .addPadding(const EdgeInsets.symmetric(horizontal: 10)),
           ],
           indicatorColor: Colors.blueGrey,
           labelColor: Colors.blueGrey,
-          indicatorPadding: EdgeInsets.only(bottom: 3)),
+          indicatorPadding: const EdgeInsets.only(bottom: 3)),
     );
   }
 }

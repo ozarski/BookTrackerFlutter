@@ -13,7 +13,6 @@ class StatusSelectionRadioButtons extends StatefulWidget {
 
 class StatusSelectionRadioButtonsState
     extends State<StatusSelectionRadioButtons> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,78 +23,54 @@ class StatusSelectionRadioButtonsState
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  setState(() => status = BookStatus.reading);
-                  newBookModel.setStatus(BookStatus.reading);
-                },
-                child: Row(
-                  children: [
-                    Radio<BookStatus>(
-                        value: BookStatus.reading,
-                        groupValue: status,
-                        onChanged: (status) {
-                          setState(() => status = status);
-                          newBookModel.setStatus(status!);
-                        }),
-                    const Text(
-                      'Reading',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
+              statusRadioButton(
+                newBookModel,
+                status,
+                BookStatus.reading,
+                'Reading',
               ),
-              InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  setState(() => status = BookStatus.finished);
-                  newBookModel.setStatus(BookStatus.finished);
-                },
-                child: Row(
-                  children: [
-                    Radio<BookStatus>(
-                        value: BookStatus.finished,
-                        groupValue: status,
-                        onChanged: (status) {
-                          setState(() => status = status);
-                          newBookModel.setStatus(status!);
-                        }),
-                    const Text(
-                      'Finished',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
+              statusRadioButton(
+                newBookModel,
+                status,
+                BookStatus.finished,
+                'Finished',
               ),
-              InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  setState(() => status = BookStatus.wantToRead);
-                  newBookModel.setStatus(BookStatus.wantToRead);
-                },
-                child: Row(
-                  children: [
-                    Radio<BookStatus>(
-                        value: BookStatus.wantToRead,
-                        groupValue: status,
-                        onChanged: (status) {
-                          setState(() => status = status);
-                          newBookModel.setStatus(status!);
-                        }),
-                    const Text(
-                      'Want to read',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
+              statusRadioButton(
+                newBookModel,
+                status,
+                BookStatus.wantToRead,
+                'Want to read',
               ),
             ],
           );
         },
+      ),
+    );
+  }
+  
+  Widget statusRadioButton(NewBookModel book, BookStatus? status,
+      BookStatus targetStatus, String label) {
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: () {
+        setState(() => status = targetStatus);
+        book.setStatus(targetStatus);
+      },
+      child: Row(
+        children: [
+          Radio<BookStatus>(
+              value: targetStatus,
+              groupValue: status,
+              onChanged: (status) {
+                setState(() => status = status);
+                book.setStatus(status!);
+              }),
+          Text(
+            label,
+            style: const TextStyle(color: Colors.black),
+          ),
+        ],
       ),
     );
   }

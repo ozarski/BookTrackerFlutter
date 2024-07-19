@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:book_tracker/models/book.dart';
 import 'package:book_tracker/providers/book_list_model.dart';
 import 'package:flutter/material.dart';
 import '../widgets/book_list_item.dart';

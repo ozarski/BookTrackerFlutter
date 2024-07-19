@@ -18,7 +18,43 @@ class BookListModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void bookUpdated() {
+    notifyListeners();
+  }
+
   void mockBooks() {
+    List<String> bookTitles = [
+      'The Great Gatsby',
+      'To Kill a Mockingbird',
+      '1984',
+      'Pride and Prejudice',
+      'The Catcher in the Rye',
+      'The Lord of the Rings',
+      'Animal Farm',
+      'Brave New World',
+      'The Hobbit',
+      'Fahrenheit 451',
+      'The Final Empire',
+      'The Well of Ascension',
+      'The Hero of Ages',
+      'The Story of Philosophy',
+      'The Art of War',
+      'Harry Potter and the Philosopher\'s Stone',
+      'Harry Potter and the Chamber of Secrets',
+      'Harry Potter and the Prisoner of Azkaban',
+      'Harry Potter and the Goblet of Fire',
+      'Harry Potter and the Order of the Phoenix',
+      'Harry Potter and the Half-Blood Prince',
+      'Harry Potter and the Deathly Hallows',
+    ];
+    List<String> authors = [
+      'John Ronald Reuel Tolkien',
+      'Brandon Sanderson',
+      'J.K. Rowling',
+      'Ernest Hemingway',
+      'Aldous Huxley',
+      'George Orwell',
+    ];
     _books.clear();
     _books.addAll(
       List.generate(
@@ -26,11 +62,20 @@ class BookListModel extends ChangeNotifier {
         (index) {
           BookStatus randomBookStatus =
               BookStatus.values[Random().nextInt(BookStatus.values.length)];
+          String bookTitle = bookTitles[Random().nextInt(bookTitles.length)];
+          String author = authors[Random().nextInt(authors.length)];
+          int pages = Random().nextInt(500) + 100;
+          DateTime startDate = DateTime.now().subtract(Duration(days: Random().nextInt(365)));
+          DateTime finishDate = startDate.add(Duration(days: Random().nextInt(50)));
+          int progress = randomBookStatus == BookStatus.reading ? Random().nextInt(pages) : 0;
           return Book(
-            title: 'Book no: $index',
-            author: 'Author no: $index',
-            pages: Random().nextInt(500) + 100,
+            title: bookTitle,
+            author: author,
+            pages: pages,
             status: randomBookStatus,
+            progress: progress,
+            startDate: startDate,
+            finishDate: finishDate
           );
         },
       ),

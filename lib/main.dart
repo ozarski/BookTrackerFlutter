@@ -1,3 +1,4 @@
+import 'package:book_tracker/screens/book_details_screen.dart';
 import 'package:book_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       routes: <String, WidgetBuilder>{
         '/add_book': (BuildContext context) => const AddBookScreen(),
+        '/book_details': (BuildContext context) => const BookDetailsScreen(),
       },
       home: const DefaultTabController(
         length: 2,

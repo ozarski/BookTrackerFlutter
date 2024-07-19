@@ -9,20 +9,23 @@ class BookListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Color color = () {
       switch (_book.status) {
         case BookStatus.reading:
-          return const Color.fromARGB(255, 108, 163, 110);
+          return const Color.fromARGB(180, 108, 163, 110);
         case BookStatus.finished:
-          return const Color.fromARGB(255, 108, 150, 184);
+          return const Color.fromARGB(180, 108, 150, 184);
         default:
-          return const Color.fromARGB(255, 181, 110, 110);
+          return const Color.fromARGB(180, 181, 110, 110);
       }
     }();
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: ListTile(
         title: Text(
           _book.title,
@@ -35,11 +38,12 @@ class BookListItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         //trailing: const Icon(Icons.info_outline),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-        tileColor: color,
+        onTap: () {
+          Navigator.pushNamed(context, '/book_details', arguments: {
+            'book': _book,
+          });
+        },
       ),
     );
   }
