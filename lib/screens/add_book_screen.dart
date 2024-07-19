@@ -15,18 +15,32 @@ class AddBookScreen extends StatelessWidget {
         builder: (context, newBookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Add Book'),
+              title: const Text('Add Book', style: TextStyle(fontWeight: FontWeight.w300)),
+              bottom: const PreferredSize(
+                preferredSize: Size.fromHeight(4.0),
+                child: Divider(
+                  color: Colors.black,
+                  height: 4.0,
+                  thickness: 0.5,
+                  indent: 0.0,
+                  endIndent: 0.0,
+                ),
+              ),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             floatingActionButton: SizedBox(
-              width: 300,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: FloatingActionButton(
                 onPressed: () {
                   //TODO("Save the book to the database");
                   print(newBookModel.book);
                 },
-                child: const Text('SAVE', style: TextStyle(fontSize: 20)),
+                child: const Text('SAVE',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w300)),
               ),
             ),
             body: Center(
@@ -37,10 +51,8 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
-                        border: OutlineInputBorder(),
-                      ),
+                      cursorColor: Colors.black,
+                      decoration: textFieldDecoration('title'),
                       onChanged: (title) {
                         newBookModel.setTitle(title);
                       },
@@ -50,10 +62,8 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Author',
-                        border: OutlineInputBorder(),
-                      ),
+                      cursorColor: Colors.black,
+                      decoration: textFieldDecoration('author'),
                       onChanged: (author) {
                         newBookModel.setAuthor(author);
                       },
@@ -63,13 +73,14 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Pages',
-                        border: OutlineInputBorder(),
-                      ),
+                      cursorColor: Colors.black,
+                      decoration: textFieldDecoration('pages'),
                       keyboardType: TextInputType.number,
                       onChanged: (numberOfPages) {
-                        newBookModel.setNumberOfPages(int.parse(numberOfPages));
+                        if (numberOfPages != "") {
+                          newBookModel
+                              .setNumberOfPages(int.parse(numberOfPages));
+                        }
                       },
                     ),
                   ),
@@ -84,6 +95,12 @@ class AddBookScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  InputDecoration textFieldDecoration(String labelText) {
+    return InputDecoration(
+      labelText: labelText,
     );
   }
 }

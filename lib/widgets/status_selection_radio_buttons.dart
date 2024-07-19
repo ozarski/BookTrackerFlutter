@@ -47,7 +47,7 @@ class StatusSelectionRadioButtonsState
       ),
     );
   }
-  
+
   Widget statusRadioButton(NewBookModel book, BookStatus? status,
       BookStatus targetStatus, String label) {
     return InkWell(
@@ -60,12 +60,14 @@ class StatusSelectionRadioButtonsState
       child: Row(
         children: [
           Radio<BookStatus>(
-              value: targetStatus,
-              groupValue: status,
-              onChanged: (status) {
-                setState(() => status = status);
-                book.setStatus(status!);
-              }),
+            value: targetStatus,
+            groupValue: status,
+            onChanged: (status) {
+              setState(() => status = status);
+              book.setStatus(status!);
+            },
+            activeColor: Colors.black,
+          ),
           Text(
             label,
             style: const TextStyle(color: Colors.black),

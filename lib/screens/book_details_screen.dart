@@ -19,44 +19,43 @@ class BookDetailsScreen extends StatelessWidget {
         builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Book Details'),
+              title: const Text('Book Details', style: TextStyle(fontWeight: FontWeight.w300)),
+              bottom: const PreferredSize(
+                preferredSize: Size.fromHeight(4.0),
+                child: Divider(
+                  color: Colors.black,
+                  height: 4.0,
+                  thickness: 0.5,
+                  indent: 0.0,
+                  endIndent: 0.0,
+                ),
+              ),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Builder(
               builder: (context) {
                 if (bookModel.book.status == BookStatus.reading) {
-                  return SizedBox(
-                    width: 300,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        bookModel.setStatus(BookStatus.finished);
-                        Consumer<BookListModel>(
-                          builder: (context, bookListModel, child) {
-                            bookListModel.bookUpdated();
-                            return Container();
-                          },
-                        );
+                  return floatingActionButton('Finish', context, bookModel, () {
+                    bookModel.setStatus(BookStatus.finished);
+                    Consumer<BookListModel>(
+                      builder: (context, bookListModel, child) {
+                        bookListModel.bookUpdated();
+                        return Container();
                       },
-                      child: const Text('Finish'),
-                    ),
-                  );
+                    );
+                  });
                 } else if (bookModel.book.status == BookStatus.wantToRead) {
-                  return SizedBox(
-                    width: 300,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        bookModel.setStatus(BookStatus.reading);
-                        Consumer<BookListModel>(
-                          builder: (context, bookListModel, child) {
-                            bookListModel.bookUpdated();
-                            return Container();
-                          },
-                        );
+                  return floatingActionButton(
+                      'Start reading', context, bookModel, () {
+                    bookModel.setStatus(BookStatus.reading);
+                    Consumer<BookListModel>(
+                      builder: (context, bookListModel, child) {
+                        bookListModel.bookUpdated();
+                        return Container();
                       },
-                      child: const Text('Start Reading'),
-                    ),
-                  );
+                    );
+                  });
                 }
                 return Container();
               },
@@ -170,6 +169,23 @@ class BookDetailsScreen extends StatelessWidget {
         ).addPadding(const EdgeInsets.only(top: 40)),
         const BookProgressSlider()
       ],
+    );
+  }
+
+  Widget floatingActionButton(String label, BuildContext context,
+      BookModel bookModel, Function onPressed) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.9,
+      child: FloatingActionButton(
+        onPressed: () {
+          onPressed();
+        },
+        child: Text(label,
+            style: const TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w300)),
+      ),
     );
   }
 }

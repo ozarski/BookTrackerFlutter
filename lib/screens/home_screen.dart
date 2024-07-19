@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:book_tracker/widgets/main_tab_bar.dart';
 import 'package:book_tracker/widgets/main_tab_bar_view.dart';
@@ -10,8 +9,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isDarkModeEnabled =
-        MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
@@ -28,11 +25,8 @@ class HomeScreen extends StatelessWidget {
       body: Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor:
-                  Colors.white,
-            statusBarIconBrightness:
-                Brightness.dark
-          ),
+              statusBarColor: Colors.white,
+              statusBarIconBrightness: Brightness.dark),
           child: Container(
             color: Colors.white,
             child: const Column(

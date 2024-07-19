@@ -16,16 +16,23 @@ class _BookProgressSliderState extends State<BookProgressSlider> {
       builder: (context, bookModel, child) {
         return Column(
           children: [
-            Slider(
-              value: bookModel.book.progress.toDouble(),
-              min: 0,
-              max: bookModel.book.pages.toDouble(),
-              onChanged: (value) {
-                setState(() {
-                  bookModel.updateProgress(value.toInt());
-                });
-              },
-              label: bookModel.book.progress.toString(),
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                trackHeight: 0.5,
+              ),
+              child: Slider(
+                  value: bookModel.book.progress.toDouble(),
+                  min: 0,
+                  max: bookModel.book.pages.toDouble(),
+                  onChanged: (value) {
+                    setState(() {
+                      bookModel.updateProgress(value.toInt());
+                    });
+                  },
+                  label: bookModel.book.progress.toString(),
+                  thumbColor: Colors.black,
+                  activeColor: Colors.black,
+                  inactiveColor: Colors.grey),
             ),
           ],
         );
