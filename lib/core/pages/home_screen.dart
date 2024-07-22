@@ -1,6 +1,6 @@
 
-import 'package:book_tracker/widgets/main_tab_bar.dart';
-import 'package:book_tracker/widgets/main_tab_bar_view.dart';
+import 'package:book_tracker/core/widgets/main_tab_bar.dart';
+import 'package:book_tracker/core/widgets/main_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

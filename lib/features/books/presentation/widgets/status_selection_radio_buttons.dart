@@ -1,5 +1,5 @@
-import 'package:book_tracker/models/book.dart';
-import 'package:book_tracker/providers/new_book_model.dart';
+import 'package:book_tracker/features/books/domain/entities/book.dart';
+import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

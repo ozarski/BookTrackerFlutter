@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Book {
   String title;
   String author;
@@ -33,7 +35,11 @@ class Book {
       return;
     }
     if(startDate != null && finishDate.isBefore(startDate!)) {
-      throw Exception('Finish date cannot be before start date');
+      if (kDebugMode) {
+        print('Finish date is before start date');
+      }
+      this.finishDate = startDate;
+      return;
     }
     this.finishDate = finishDate;
   }

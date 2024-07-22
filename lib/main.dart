@@ -1,9 +1,9 @@
-import 'package:book_tracker/screens/book_details_screen.dart';
-import 'package:book_tracker/screens/home_screen.dart';
+import 'package:book_tracker/features/books/presentation/pages/book_details_screen.dart';
+import 'package:book_tracker/core/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'screens/add_book_screen.dart';
+import 'features/books/presentation/pages/add_book_screen.dart';
 
 void main() {
   runApp(const MainApp());

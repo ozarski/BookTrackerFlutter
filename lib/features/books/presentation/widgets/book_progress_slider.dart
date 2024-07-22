@@ -1,4 +1,4 @@
-import 'package:book_tracker/providers/book_model.dart';
+import 'package:book_tracker/features/books/presentation/state/book_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
