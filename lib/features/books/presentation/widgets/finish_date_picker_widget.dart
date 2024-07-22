@@ -10,7 +10,7 @@ class FinishDatePickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewBookModel>(
+    return Consumer<NewBookStateModel>(
       builder: (context, newBookModel, child) {
         DateTime date = newBookModel.book.finishDate ??
             newBookModel.book.startDate ??
@@ -37,7 +37,7 @@ class FinishDatePickerWidget extends StatelessWidget {
   }
 
   Future<DateTime?> setUpDatePicker(
-      NewBookModel bookModel, BuildContext context) async {
+      NewBookStateModel bookModel, BuildContext context) async {
     if (bookModel.book.status == BookStatus.finished) {
       return await showDatePicker(
         context: context,

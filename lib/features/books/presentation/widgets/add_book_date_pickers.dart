@@ -15,7 +15,7 @@ class NewBookDates extends StatefulWidget {
 class _NewBookDatesState extends State<NewBookDates> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewBookModel>(
+    return Consumer<NewBookStateModel>(
       builder: (context, newBookModel, child) {
         if (newBookModel.book.status == BookStatus.reading) {
           return const Column(

@@ -2,11 +2,11 @@ import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class BookModel extends ChangeNotifier{
+class BookStateModel extends ChangeNotifier{
 
   Book book;
 
-  BookModel({required this.book});
+  BookStateModel({required this.book});
 
   String getStartDate(){
     return book.startDate != null ? DateFormat('dd.MM.yyyy').format(book.startDate!) : '';

@@ -1,10 +1,17 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
+import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:flutter/material.dart';
 
-class NewBookModel extends ChangeNotifier {
+class NewBookStateModel extends ChangeNotifier {
   final Book _book = Book.addBookInit();
 
   Book get book => _book;
+
+  void saveToDatabase() async {
+    final bookRepository = BookRepository();
+
+    await bookRepository.addBook(_book);
+  }
 
   void setTitle(String title) {
     _book.title = title;

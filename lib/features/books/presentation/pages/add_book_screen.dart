@@ -10,8 +10,8 @@ class AddBookScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => NewBookModel(),
-      child: Consumer<NewBookModel>(
+      create: (context) => NewBookStateModel(),
+      child: Consumer<NewBookStateModel>(
         builder: (context, newBookModel, child) {
           
           return Scaffold(
@@ -34,8 +34,7 @@ class AddBookScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.9,
               child: FloatingActionButton(
                 onPressed: () {
-                  //TODO("Save the book to the database");
-                  print(newBookModel.book);
+                  newBookModel.saveToDatabase();
                 },
                 child: const Text('SAVE',
                     style: TextStyle(

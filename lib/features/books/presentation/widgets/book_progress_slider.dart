@@ -1,4 +1,4 @@
-import 'package:book_tracker/features/books/presentation/state/book_model.dart';
+import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class BookProgressSlider extends StatefulWidget {
 class _BookProgressSliderState extends State<BookProgressSlider> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<BookModel>(
+    return Consumer<BookStateModel>(
       builder: (context, bookModel, child) {
         return Column(
           children: [

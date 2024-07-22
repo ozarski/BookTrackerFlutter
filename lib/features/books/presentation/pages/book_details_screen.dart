@@ -1,6 +1,6 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
-import 'package:book_tracker/features/books/presentation/state/book_model.dart';
+import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/core/utils/PaddingExtension.dart';
 import 'package:book_tracker/features/books/presentation/widgets/book_progress_slider.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +14,8 @@ class BookDetailsScreen extends StatelessWidget {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
     Book book = routeArgs['book'] as Book;
     return ChangeNotifierProvider(
-      create: (context) => BookModel(book: book),
-      child: Consumer<BookModel>(
+      create: (context) => BookStateModel(book: book),
+      child: Consumer<BookStateModel>(
         builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
@@ -114,7 +114,7 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget bookDates(BookModel bookModel) {
+  Widget bookDates(BookStateModel bookModel) {
     return Column(
       children: [
         Text(bookModel.getStartDate(), style: const TextStyle(fontSize: 20))
@@ -127,7 +127,7 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget finishedBookDetails(BookModel bookModel) {
+  Widget finishedBookDetails(BookStateModel bookModel) {
     double bookPagesPerDay = bookModel.book.pages /
         (bookModel.book.finishDate!
             .difference(bookModel.book.startDate!)
@@ -143,7 +143,7 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget readingBookDetails(BookModel bookModel) {
+  Widget readingBookDetails(BookStateModel bookModel) {
     return Column(children: [
       Text(bookModel.getStartDate(), style: const TextStyle(fontSize: 20))
           .addPadding(const EdgeInsets.only(top: 20)),
@@ -152,7 +152,7 @@ class BookDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  Widget bookProgress(BookModel bookModel) {
+  Widget bookProgress(BookStateModel bookModel) {
     return Column(
       children: [
         Row(
@@ -173,7 +173,7 @@ class BookDetailsScreen extends StatelessWidget {
   }
 
   Widget floatingActionButton(String label, BuildContext context,
-      BookModel bookModel, Function onPressed) {
+      BookStateModel bookModel, Function onPressed) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
       child: FloatingActionButton(

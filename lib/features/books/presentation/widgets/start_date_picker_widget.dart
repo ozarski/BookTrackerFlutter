@@ -10,7 +10,7 @@ class StartDatePickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewBookModel>(
+    return Consumer<NewBookStateModel>(
       builder: (context, newBookModel, child) {
         DateTime date = newBookModel.book.startDate ?? DateTime.now();
         var formattedDate = DateFormat('dd.MM.yyyy').format(date);
@@ -35,7 +35,7 @@ class StartDatePickerWidget extends StatelessWidget {
   }
 
   Future<DateTime?> setUpDatePicker(
-      NewBookModel bookModel, BuildContext context) async {
+      NewBookStateModel bookModel, BuildContext context) async {
     if (bookModel.book.status == BookStatus.reading) {
       return await showDatePicker(
         context: context,

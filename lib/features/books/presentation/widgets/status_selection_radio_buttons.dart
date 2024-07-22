@@ -17,7 +17,7 @@ class StatusSelectionRadioButtonsState
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 25, left: 10),
-      child: Consumer<NewBookModel>(
+      child: Consumer<NewBookStateModel>(
         builder: (context, newBookModel, child) {
           BookStatus? status = newBookModel.book.status;
           return Row(
@@ -48,7 +48,7 @@ class StatusSelectionRadioButtonsState
     );
   }
 
-  Widget statusRadioButton(NewBookModel book, BookStatus? status,
+  Widget statusRadioButton(NewBookStateModel book, BookStatus? status,
       BookStatus targetStatus, String label) {
     return InkWell(
       splashColor: Colors.transparent,
