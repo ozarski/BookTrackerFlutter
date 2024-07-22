@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,15 @@ class BookListModel extends ChangeNotifier {
 
   void bookUpdated() {
     notifyListeners();
+  }
+
+  void loadBooks() {
+    final repository = BookRepository();
+    repository.getBooks().then((value) {
+      _books.clear();
+      _books.addAll(value);
+      notifyListeners();
+    });
   }
 
   void mockBooks() {

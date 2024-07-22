@@ -3,6 +3,7 @@ import 'package:book_tracker/features/books/presentation/widgets/add_book_date_p
 import 'package:book_tracker/features/books/presentation/widgets/status_selection_radio_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddBookScreen extends StatelessWidget {
   const AddBookScreen({super.key});
@@ -33,8 +34,21 @@ class AddBookScreen extends StatelessWidget {
             floatingActionButton: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: FloatingActionButton(
-                onPressed: () {
-                  newBookModel.saveToDatabase();
+                onPressed: () async {
+                  if(await newBookModel.saveToDatabase()){
+                    if(context.mounted) Navigator.pop(context);
+                  }
+                  else {
+                    Fluttertoast.showToast(
+                        msg: 'Please fill in all fields',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0
+                    );
+                  }
                 },
                 child: const Text('SAVE',
                     style: TextStyle(

@@ -18,9 +18,9 @@ abstract class BookDatabaseConstants {
       $columnTitle TEXT NOT NULL,
       $columnAuthor TEXT NOT NULL,
       $columnPages INTEGER NOT NULL,
-      $columnStatus TEXT NOT NULL,
-      $columnStartDate TEXT,
-      $columnFinishDate TEXT,
+      $columnStatus INTEGER NOT NULL,
+      $columnStartDate INTEGER,
+      $columnFinishDate INTEGER,
       $columnProgress INTEGER
     )
   ''';

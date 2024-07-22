@@ -7,10 +7,13 @@ class NewBookStateModel extends ChangeNotifier {
 
   Book get book => _book;
 
-  void saveToDatabase() async {
-    final bookRepository = BookRepository();
-
-    await bookRepository.addBook(_book);
+  Future<bool> saveToDatabase() async {
+    if(validateData()){
+      final bookRepository = BookRepository();
+      await bookRepository.addBook(_book);
+      return true;
+    }
+    return false;
   }
 
   void setTitle(String title) {
@@ -41,5 +44,15 @@ class NewBookStateModel extends ChangeNotifier {
   void setStatus(BookStatus status) {
     _book.setStatus(status);
     notifyListeners();
+  }
+
+  bool validateData(){
+    if(book.status == BookStatus.finished && (book.startDate == null || book.finishDate == null)){
+      return false;
+    }
+    if(book.status == BookStatus.reading && book.startDate == null){
+      return false;
+    }
+    return book.title.isNotEmpty && book.author.isNotEmpty && book.pages > 0;
   }
 }
