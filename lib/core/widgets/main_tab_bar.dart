@@ -1,4 +1,4 @@
-import 'package:book_tracker/core/utils/PaddingExtension.dart';
+import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:flutter/material.dart';
 
 class MainTabBar extends StatelessWidget {

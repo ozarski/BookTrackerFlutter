@@ -11,6 +11,9 @@ class BookRepository implements BookRepositoryInterface {
   @override
   Future<Book> addBook(Book book) async {
     final db = await BookDatabase.instance.database;
+    if(validateBook(book) == false){
+      throw InvalidBookInputError('Invalid book input');
+    }
     var bookModel = BookModel.fromEntity(book); 
 
     bookModel.id = await db.insert('books', bookModel.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -21,11 +24,15 @@ class BookRepository implements BookRepositoryInterface {
   Future<void> deleteBook(int id) async {
     final db = await BookDatabase.instance.database;
 
-    await db.delete(
+    final deletedBooks = await db.delete(
       BookDatabaseConstants.booksTableName,
       where: '${BookDatabaseConstants.columnId} = ?',
       whereArgs: [id],
     );
+
+    if (deletedBooks == 0) {
+      throw ObjectNotFoundError('Book not found');
+    }
   }
 
   @override
@@ -57,6 +64,9 @@ class BookRepository implements BookRepositoryInterface {
 
   @override
   Future<Book> updateBook(Book book) async {
+    if(validateBook(book) == false){
+      throw InvalidBookInputError('Invalid book input');
+    }
     final db = await BookDatabase.instance.database;
 
     var success = await db.update(
@@ -70,5 +80,24 @@ class BookRepository implements BookRepositoryInterface {
       throw ObjectNotFoundError('Book not found');
     }
     return book;
+  }
+
+  bool validateBook(Book book){
+    if(book.title.isEmpty || book.author.isEmpty || book.pages <= 0){
+      return false;
+    }
+    if(book.status == BookStatus.finished && (book.finishDate == null || book.startDate == null)){
+      return false;
+    }
+    if(book.status == BookStatus.reading && (book.startDate == null || book.finishDate != null)){
+      return false;
+    }
+    if(book.status == BookStatus.wantToRead && (book.startDate != null || book.finishDate != null)){
+      return false;
+    }
+    if(book.startDate != null && book.finishDate != null && book.startDate!.isAfter(book.finishDate!)){
+      return false;
+    }
+    return true;
   }
 }

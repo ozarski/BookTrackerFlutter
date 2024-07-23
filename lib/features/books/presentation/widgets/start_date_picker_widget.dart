@@ -1,6 +1,6 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
-import 'package:book_tracker/core/utils/PaddingExtension.dart';
+import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

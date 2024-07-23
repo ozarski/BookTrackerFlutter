@@ -1,12 +1,16 @@
 
-class ObjectNotFoundError extends DatabaseError {
+class ObjectNotFoundError extends BookRepositoryError {
   ObjectNotFoundError(super.message);
 }
 
-class DatabaseError extends Error {
+class InvalidBookInputError extends BookRepositoryError {
+  InvalidBookInputError(super.message);
+}
+
+class BookRepositoryError extends Error {
   final String message;
 
-  DatabaseError(this.message);
+  BookRepositoryError(this.message);
 
   @override
   String toString() {

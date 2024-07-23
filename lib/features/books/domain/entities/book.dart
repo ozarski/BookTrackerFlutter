@@ -78,6 +78,28 @@ class Book {
     book.setStatus(BookStatus.reading);
     return book;
   }
+
+  Book copyWith({
+    String? title,
+    String? author,
+    int? pages,
+    BookStatus? status,
+    DateTime? startDate,
+    DateTime? finishDate,
+    int? progress,
+    int? id,
+  }) {
+    return Book(
+      title: title ?? this.title,
+      author: author ?? this.author,
+      pages: pages ?? this.pages,
+      status: status ?? this.status,
+      startDate: startDate ?? this.startDate,
+      finishDate: finishDate ?? this.finishDate,
+      progress: progress ?? this.progress,
+      id: id ?? this.id,
+    );
+  }
 }
 
 enum BookStatus {

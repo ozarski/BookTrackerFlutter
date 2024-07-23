@@ -1,5 +1,5 @@
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
-import 'package:book_tracker/core/utils/PaddingExtension.dart';
+import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/statistics/presentation/widgets/stat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
