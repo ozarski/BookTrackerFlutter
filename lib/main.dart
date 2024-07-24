@@ -87,6 +87,7 @@ class MainApp extends StatelessWidget {
         length: 2,
         child: HomeScreen(),
       ),
+     debugShowCheckedModeBanner: false,
     );
   }
 }

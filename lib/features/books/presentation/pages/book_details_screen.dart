@@ -52,9 +52,10 @@ class BookDetailsScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {
-                    bookModel.deleteBook();
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    if(await deleteBook(context, bookModel)){
+                      Navigator.of(context).pop();
+                    }
                   },
                   icon: const Icon(Icons.delete),
                 ),
@@ -210,5 +211,41 @@ class BookDetailsScreen extends StatelessWidget {
                 fontWeight: FontWeight.w300)),
       ),
     );
+  }
+
+  Future<bool> deleteBook(BuildContext context, BookStateModel bookModel) async{
+    var deleted = false;
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete book'),
+          content: const Text('Are you sure?', style: TextStyle(fontSize: 17)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                bookModel.deleteBook();
+                Navigator.of(context).pop();
+                deleted = true;
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.black),
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: const BorderSide(color: Colors.black, width: 0.5),
+          ),
+        );
+      },
+    );
+    return deleted;
   }
 }
