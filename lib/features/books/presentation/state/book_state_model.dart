@@ -57,6 +57,10 @@ class BookStateModel extends ChangeNotifier {
     return book?.finishDate;
   }
 
+  int getID(){
+    return book?.id ?? 0;
+  }
+
   String getFormattedStartDate() {
     if (book == null) return '';
     return book?.startDate != null

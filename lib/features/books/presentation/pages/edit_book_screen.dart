@@ -1,26 +1,28 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
-import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
 import 'package:book_tracker/features/books/presentation/widgets/add_book_date_pickers.dart';
 import 'package:book_tracker/features/books/presentation/widgets/status_selection_radio_buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
-class AddBookScreen extends StatelessWidget {
-  const AddBookScreen({super.key});
+class EditBookScreen extends StatelessWidget {
+  const EditBookScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final addBookUseCase = context.read<AddBookUseCase>();
-    return ChangeNotifierProvider(
-      create: (context) => ModifyBookStateModel(addBookUseCase, Book.addBookInit()),
+    final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
+    Book book = routeArgs['book'] as Book? ?? Book.addBookInit();
+    return ChangeNotifierProvider<ModifyBookStateModel>(
+      create: (context) =>
+          ModifyBookStateModel(context.read<UpdateBookUseCase>(), book),
       child: Consumer<ModifyBookStateModel>(
-        builder: (context, newBookModel, child) {
+        builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Add Book',
+              title: const Text('Edit Book',
                   style: TextStyle(fontWeight: FontWeight.w300)),
               bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(4.0),
@@ -33,36 +35,6 @@ class AddBookScreen extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  if (await newBookModel.saveToDatabase()) {
-                    if (context.mounted) {
-                      final bookListModel = context.read<BookListModel>();
-                      bookListModel.reloadBooks();
-                      Navigator.pop(context);
-                    }
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: 'Please fill in all fields',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                  }
-                },
-                child: const Text('Save',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w300)),
-              ),
-            ),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -70,38 +42,40 @@ class AddBookScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: TextField(
+                    child: TextFormField(
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('title'),
                       onChanged: (title) {
-                        newBookModel.setTitle(title);
+                        bookModel.setTitle(title);
                       },
+                      initialValue: book.title,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: TextField(
+                    child: TextFormField(
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('author'),
                       onChanged: (author) {
-                        newBookModel.setAuthor(author);
+                        bookModel.setAuthor(author);
                       },
+                      initialValue: book.author,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    child: TextField(
+                    child: TextFormField(
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('pages'),
                       keyboardType: TextInputType.number,
                       onChanged: (numberOfPages) {
                         if (numberOfPages != "") {
-                          newBookModel
-                              .setNumberOfPages(int.parse(numberOfPages));
+                          bookModel.setNumberOfPages(int.parse(numberOfPages));
                         }
                       },
+                      initialValue: book.pages.toString(),
                     ),
                   ),
                   const Padding(
@@ -112,15 +86,47 @@ class AddBookScreen extends StatelessWidget {
                 ],
               ),
             ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: actionButton(bookModel, context),
           );
         },
       ),
     );
   }
+}
 
-  InputDecoration textFieldDecoration(String labelText) {
-    return InputDecoration(
-      labelText: labelText,
-    );
-  }
+Widget actionButton(ModifyBookStateModel bookModel, BuildContext context) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width * 0.9,
+    child: FloatingActionButton(
+      onPressed: () async {
+        if (await bookModel.saveToDatabase()) {
+          if (context.mounted) {
+            final bookListModel = context.read<BookListModel>();
+            bookListModel.reloadBooks();
+            Navigator.pop(context);
+          }
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Please fill in all fields',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      },
+      child: const Text('Save',
+          style: TextStyle(
+              fontSize: 20, color: Colors.black, fontWeight: FontWeight.w300)),
+    ),
+  );
+}
+
+InputDecoration textFieldDecoration(String labelText) {
+  return InputDecoration(
+    labelText: labelText,
+  );
 }

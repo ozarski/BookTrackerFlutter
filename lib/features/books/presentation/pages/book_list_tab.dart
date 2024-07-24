@@ -14,7 +14,6 @@ class BookListTab extends StatelessWidget {
         Expanded(
           child: Consumer<BookListModel>(
             builder: (context, model, child) {
-              model.loadBooks();
               return ListView.builder(
                 itemCount: model.books.length,
                 itemBuilder: (context, index) {

@@ -10,7 +10,9 @@ class BookListModel extends ChangeNotifier {
 
   List<Book> get books => _books;
 
-  BookListModel(this._displayBookListUseCase);
+  BookListModel(this._displayBookListUseCase){
+    _loadBooks();
+  }
 
   void addBook(Book book) {
     _books.add(book);
@@ -22,11 +24,11 @@ class BookListModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void bookUpdated() {
-    notifyListeners();
+  void reloadBooks() {
+    _loadBooks();
   }
 
-  void loadBooks() {
+  void _loadBooks() {
     _displayBookListUseCase().then((value) {
       _books.clear();
       _books.addAll(value);

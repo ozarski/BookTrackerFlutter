@@ -1,18 +1,18 @@
+import 'package:book_tracker/core/use_case.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
-import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:flutter/material.dart';
 
-class NewBookStateModel extends ChangeNotifier {
-  final Book _book = Book.addBookInit();
+class ModifyBookStateModel extends ChangeNotifier {
+  final Book _book;
 
-  final AddBookUseCase _addBookUseCase;
-  NewBookStateModel(this._addBookUseCase);
+  final UseCase _addOrEditBookUseCase;
+  ModifyBookStateModel(this._addOrEditBookUseCase, this._book);
   
   Book get book => _book;
 
   Future<bool> saveToDatabase() async {
     if(validateData()){
-      await _addBookUseCase(_book);
+      await _addOrEditBookUseCase(_book);
       return true;
     }
     return false;

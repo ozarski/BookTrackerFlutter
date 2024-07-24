@@ -4,6 +4,7 @@ import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
+import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/widgets/book_progress_slider.dart';
@@ -38,8 +39,10 @@ class BookDetailsScreen extends StatelessWidget {
         builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Book Details',
-                  style: TextStyle(fontWeight: FontWeight.w300)),
+              title: const Text(
+                'Book Details',
+                style: TextStyle(fontWeight: FontWeight.w300),
+              ),
               bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(4.0),
                 child: Divider(
@@ -52,77 +55,55 @@ class BookDetailsScreen extends StatelessWidget {
               ),
               actions: [
                 IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      '/edit_book',
+                      arguments: {'book': bookModel.book},
+                    );
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
                   onPressed: () async {
-                    if(await deleteBook(context, bookModel)){
-                      Navigator.of(context).pop();
+                    if (await deleteBook(context, bookModel)) {
+                      if (context.mounted) Navigator.of(context).pop();
                     }
                   },
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.delete, color: Colors.red)
+                      .addPadding(const EdgeInsets.only(right: 10)),
                 ),
               ],
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: Builder(
-              builder: (context) {
-                if (bookModel.getBookStatus() == BookStatus.reading) {
-                  return floatingActionButton('Finish', context, bookModel, () {
-                    bookModel.setStatus(BookStatus.finished);
-                  });
-                } else if (bookModel.getBookStatus() == BookStatus.wantToRead) {
-                  return floatingActionButton(
-                      'Start reading', context, bookModel, () {
-                    bookModel.setStatus(BookStatus.reading);
-                  });
-                }
-                return Container();
-              },
-            ),
             body: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    bookModel.getBookTitle(),
-                    style: const TextStyle(fontSize: 35),
-                    textAlign: TextAlign.center,
-                  ).addPadding(const EdgeInsets.only(
-                    top: 40,
-                    bottom: 5,
-                    left: 20,
-                    right: 20,
-                  )),
-                  Text(
-                    'by ${bookModel.getBookAuthor()}',
-                    style: const TextStyle(fontSize: 20),
-                    textAlign: TextAlign.center,
-                  ).addPadding(const EdgeInsets.only(bottom: 20)),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 0.5,
-                    indent: 20,
-                    endIndent: 20,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      basicBookInfo(bookModel),
+                      Builder(
+                        builder: (context) {
+                          if (bookModel.getBookStatus() ==
+                              BookStatus.finished) {
+                            return finishedBookDetails(bookModel);
+                          } else if (bookModel.getBookStatus() ==
+                              BookStatus.reading) {
+                            return readingBookDetails(bookModel);
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  Text(bookModel.getBookStatus().toString(),
-                          style: const TextStyle(fontSize: 20))
-                      .addPadding(const EdgeInsets.only(top: 20)),
-                  const Text('status'),
-                  Text(bookModel.getBookPages().toString(),
-                          style: const TextStyle(fontSize: 20))
-                      .addPadding(const EdgeInsets.only(top: 20)),
-                  const Text('number of pages'),
-                  Builder(
-                    builder: (context) {
-                      if (bookModel.getBookStatus() == BookStatus.finished) {
-                        return finishedBookDetails(bookModel);
-                      } else if (bookModel.getBookStatus() ==
-                          BookStatus.reading) {
-                        return readingBookDetails(bookModel);
-                      } else {
-                        return Container();
-                      }
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      bottomActionButtons(bookModel, context)
+                          .addPadding(const EdgeInsets.only(bottom: 20)),
+                    ],
                   )
                 ],
               ),
@@ -130,6 +111,59 @@ class BookDetailsScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget bottomActionButtons(BookStateModel bookModel, BuildContext context) {
+    return Builder(
+      builder: (context) {
+        if (bookModel.getBookStatus() == BookStatus.reading) {
+          return changeStatusButton('Finish', context, bookModel, () {
+            bookModel.setStatus(BookStatus.finished);
+          });
+        } else if (bookModel.getBookStatus() == BookStatus.wantToRead) {
+          return changeStatusButton('Start reading', context, bookModel, () {
+            bookModel.setStatus(BookStatus.reading);
+          });
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget basicBookInfo(BookStateModel bookModel) {
+    return Column(
+      children: [
+        Text(
+          bookModel.getBookTitle(),
+          style: const TextStyle(fontSize: 35),
+          textAlign: TextAlign.center,
+        ).addPadding(const EdgeInsets.only(
+          top: 40,
+          bottom: 5,
+          left: 20,
+          right: 20,
+        )),
+        Text(
+          'by ${bookModel.getBookAuthor()}',
+          style: const TextStyle(fontSize: 20),
+          textAlign: TextAlign.center,
+        ).addPadding(const EdgeInsets.only(bottom: 20)),
+        const Divider(
+          color: Colors.black,
+          thickness: 0.5,
+          indent: 20,
+          endIndent: 20,
+        ),
+        Text(bookModel.getBookStatus().toString(),
+                style: const TextStyle(fontSize: 20))
+            .addPadding(const EdgeInsets.only(top: 20)),
+        const Text('status'),
+        Text(bookModel.getBookPages().toString(),
+                style: const TextStyle(fontSize: 20))
+            .addPadding(const EdgeInsets.only(top: 20)),
+        const Text('number of pages'),
+      ],
     );
   }
 
@@ -196,24 +230,36 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget floatingActionButton(String label, BuildContext context,
+  Widget changeStatusButton(String label, BuildContext context,
       BookStateModel bookModel, Function onPressed) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
-      child: FloatingActionButton(
+      child: ElevatedButton(
         onPressed: () {
           onPressed();
         },
-        child: Text(label,
-            style: const TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.w300)),
+        style: ElevatedButton.styleFrom(
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: Colors.black, width: 0.3),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+            fontWeight: FontWeight.w300,
+          ),
+        ).addPadding(const EdgeInsets.symmetric(vertical: 10)),
       ),
     );
   }
 
-  Future<bool> deleteBook(BuildContext context, BookStateModel bookModel) async{
+  Future<bool> deleteBook(
+      BuildContext context, BookStateModel bookModel) async {
     var deleted = false;
     await showDialog(
       context: context,
@@ -232,6 +278,8 @@ class BookDetailsScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 bookModel.deleteBook();
+                final bookListModel = context.read<BookListModel>();
+                bookListModel.reloadBooks();
                 Navigator.of(context).pop();
                 deleted = true;
               },
