@@ -1,6 +1,9 @@
 import 'package:book_tracker/core/utils/global_functions.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
-import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
+import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
+import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/widgets/book_progress_slider.dart';
@@ -13,14 +16,30 @@ class BookDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Map;
-    Book book = routeArgs['book'] as Book;
+    int bookID = routeArgs['bookID'] as int;
+    final DisplayBookDetailsUseCase displayBookDetailsUseCase =
+        context.read<DisplayBookDetailsUseCase>();
+    final UpdateBookProgressUseCase updateBookProgressUseCase =
+        context.read<UpdateBookProgressUseCase>();
+    final UpdateBookStatusUseCase updateBookStatusUseCase =
+        context.read<UpdateBookStatusUseCase>();
+    final DeleteBookUseCase deleteBookUseCase =
+        context.read<DeleteBookUseCase>();
+
     return ChangeNotifierProvider(
-      create: (context) => BookStateModel(book: book),
+      create: (context) => BookStateModel(
+        displayBookDetailsUseCase: displayBookDetailsUseCase,
+        updateBookProgressUseCase: updateBookProgressUseCase,
+        updateBookStatusUseCase: updateBookStatusUseCase,
+        deleteBookUseCase: deleteBookUseCase,
+        id: bookID,
+      ),
       child: Consumer<BookStateModel>(
         builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Book Details', style: TextStyle(fontWeight: FontWeight.w300)),
+              title: const Text('Book Details',
+                  style: TextStyle(fontWeight: FontWeight.w300)),
               bottom: const PreferredSize(
                 preferredSize: Size.fromHeight(4.0),
                 child: Divider(
@@ -31,31 +50,28 @@ class BookDetailsScreen extends StatelessWidget {
                   endIndent: 0.0,
                 ),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    bookModel.deleteBook();
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Builder(
               builder: (context) {
-                if (bookModel.book.status == BookStatus.reading) {
+                if (bookModel.getBookStatus() == BookStatus.reading) {
                   return floatingActionButton('Finish', context, bookModel, () {
                     bookModel.setStatus(BookStatus.finished);
-                    Consumer<BookListModel>(
-                      builder: (context, bookListModel, child) {
-                        bookListModel.bookUpdated();
-                        return Container();
-                      },
-                    );
                   });
-                } else if (bookModel.book.status == BookStatus.wantToRead) {
+                } else if (bookModel.getBookStatus() == BookStatus.wantToRead) {
                   return floatingActionButton(
                       'Start reading', context, bookModel, () {
                     bookModel.setStatus(BookStatus.reading);
-                    Consumer<BookListModel>(
-                      builder: (context, bookListModel, child) {
-                        bookListModel.bookUpdated();
-                        return Container();
-                      },
-                    );
                   });
                 }
                 return Container();
@@ -67,7 +83,7 @@ class BookDetailsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    bookModel.book.title,
+                    bookModel.getBookTitle(),
                     style: const TextStyle(fontSize: 35),
                     textAlign: TextAlign.center,
                   ).addPadding(const EdgeInsets.only(
@@ -77,7 +93,7 @@ class BookDetailsScreen extends StatelessWidget {
                     right: 20,
                   )),
                   Text(
-                    'by ${bookModel.book.author}',
+                    'by ${bookModel.getBookAuthor()}',
                     style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   ).addPadding(const EdgeInsets.only(bottom: 20)),
@@ -87,19 +103,20 @@ class BookDetailsScreen extends StatelessWidget {
                     indent: 20,
                     endIndent: 20,
                   ),
-                  Text(bookModel.book.status.toString(),
+                  Text(bookModel.getBookStatus().toString(),
                           style: const TextStyle(fontSize: 20))
                       .addPadding(const EdgeInsets.only(top: 20)),
                   const Text('status'),
-                  Text(bookModel.book.pages.toString(),
+                  Text(bookModel.getBookPages().toString(),
                           style: const TextStyle(fontSize: 20))
                       .addPadding(const EdgeInsets.only(top: 20)),
                   const Text('number of pages'),
                   Builder(
                     builder: (context) {
-                      if (bookModel.book.status == BookStatus.finished) {
+                      if (bookModel.getBookStatus() == BookStatus.finished) {
                         return finishedBookDetails(bookModel);
-                      } else if (bookModel.book.status == BookStatus.reading) {
+                      } else if (bookModel.getBookStatus() ==
+                          BookStatus.reading) {
                         return readingBookDetails(bookModel);
                       } else {
                         return Container();
@@ -118,10 +135,12 @@ class BookDetailsScreen extends StatelessWidget {
   Widget bookDates(BookStateModel bookModel) {
     return Column(
       children: [
-        Text(bookModel.getStartDate(), style: const TextStyle(fontSize: 20))
+        Text(bookModel.getFormattedStartDate(),
+                style: const TextStyle(fontSize: 20))
             .addPadding(const EdgeInsets.only(top: 20)),
         const Text('start date'),
-        Text(bookModel.getFinishDate(), style: const TextStyle(fontSize: 20))
+        Text(bookModel.getFormattedFinishDate(),
+                style: const TextStyle(fontSize: 20))
             .addPadding(const EdgeInsets.only(top: 20)),
         const Text('finish date'),
       ],
@@ -130,10 +149,11 @@ class BookDetailsScreen extends StatelessWidget {
 
   Widget finishedBookDetails(BookStateModel bookModel) {
     // +1 because the start date is included in the reading time
-    int readingTime = 
-        daysBetweenDates(bookModel.book.startDate!, bookModel.book.finishDate!) + 1;
+    int readingTime = daysBetweenDates(
+            bookModel.getStartDate()!, bookModel.getFinishDate()!) +
+        1;
 
-    double bookPagesPerDay = bookModel.book.pages / readingTime;
+    double bookPagesPerDay = bookModel.getBookPages() / readingTime;
     return Column(
       children: [
         bookDates(bookModel),
@@ -147,7 +167,8 @@ class BookDetailsScreen extends StatelessWidget {
 
   Widget readingBookDetails(BookStateModel bookModel) {
     return Column(children: [
-      Text(bookModel.getStartDate(), style: const TextStyle(fontSize: 20))
+      Text(bookModel.getFormattedStartDate(),
+              style: const TextStyle(fontSize: 20))
           .addPadding(const EdgeInsets.only(top: 20)),
       const Text('start date'),
       bookProgress(bookModel),
@@ -163,13 +184,13 @@ class BookDetailsScreen extends StatelessWidget {
           children: [
             const Text('pages read'),
             Text(
-              bookModel.book.progress.toString(),
+              bookModel.getBookProgress().toString(),
               style: const TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
           ],
         ).addPadding(const EdgeInsets.only(top: 40)),
-        const BookProgressSlider()
+        const BookProgressSlider(),
       ],
     );
   }

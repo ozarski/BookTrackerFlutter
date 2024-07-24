@@ -14,6 +14,7 @@ class _BookProgressSliderState extends State<BookProgressSlider> {
   Widget build(BuildContext context) {
     return Consumer<BookStateModel>(
       builder: (context, bookModel, child) {
+        if (bookModel.book == null) return Container();
         return Column(
           children: [
             SliderTheme(
@@ -21,18 +22,22 @@ class _BookProgressSliderState extends State<BookProgressSlider> {
                 trackHeight: 0.5,
               ),
               child: Slider(
-                  value: bookModel.book.progress.toDouble(),
-                  min: 0,
-                  max: bookModel.book.pages.toDouble(),
-                  onChanged: (value) {
-                    setState(() {
-                      bookModel.updateProgress(value.toInt());
-                    });
-                  },
-                  label: bookModel.book.progress.toString(),
-                  thumbColor: Colors.black,
-                  activeColor: Colors.black,
-                  inactiveColor: Colors.grey),
+                value: bookModel.book!.progress.toDouble(),
+                min: 0,
+                max: bookModel.book!.pages.toDouble(),
+                onChanged: (value) {
+                  setState(() {
+                    bookModel.updateProgress(value.toInt());
+                  });
+                },
+                onChangeEnd: (value) {
+                  bookModel.saveProgress(value.toInt());
+                },
+                label: bookModel.book!.progress.toString(),
+                thumbColor: Colors.black,
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey,
+              ),
             ),
           ],
         );

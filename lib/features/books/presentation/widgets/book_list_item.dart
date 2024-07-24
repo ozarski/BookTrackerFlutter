@@ -32,7 +32,7 @@ class BookListItem extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 15),
         onTap: () {
           Navigator.pushNamed(context, '/book_details', arguments: {
-            'book': _book,
+            'bookID': _book.id,
           });
         },
       ),

@@ -1,8 +1,11 @@
-
 import 'package:book_tracker/features/books/data/data_sources/book_database.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
+import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
+import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_list.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
 import 'package:book_tracker/features/books/presentation/pages/book_details_screen.dart';
 import 'package:book_tracker/core/pages/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +30,18 @@ void main() {
         ProxyProvider<BookRepository, DisplayBookListUseCase>(
           update: (_, repository, __) => DisplayBookListUseCase(repository),
         ),
+        ProxyProvider<BookRepository, DisplayBookDetailsUseCase>(
+          update: (_, repository, __) => DisplayBookDetailsUseCase(repository),
+        ),
+        ProxyProvider<BookRepository, UpdateBookProgressUseCase>(
+          update: (_, repository, __) => UpdateBookProgressUseCase(repository),
+        ),
+        ProxyProvider<BookRepository, UpdateBookStatusUseCase>(
+          update: (_, repository, __) => UpdateBookStatusUseCase(repository),
+        ),
+        ProxyProvider<BookRepository, DeleteBookUseCase>(
+          update: (_, repository, __) => DeleteBookUseCase(repository),
+        )
       ],
       child: const MainApp(),
     ),
