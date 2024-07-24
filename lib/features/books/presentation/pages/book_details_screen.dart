@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/utils/global_functions.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
@@ -128,10 +129,11 @@ class BookDetailsScreen extends StatelessWidget {
   }
 
   Widget finishedBookDetails(BookStateModel bookModel) {
-    double bookPagesPerDay = bookModel.book.pages /
-        (bookModel.book.finishDate!
-            .difference(bookModel.book.startDate!)
-            .inDays);
+    // +1 because the start date is included in the reading time
+    int readingTime = 
+        daysBetweenDates(bookModel.book.startDate!, bookModel.book.finishDate!) + 1;
+
+    double bookPagesPerDay = bookModel.book.pages / readingTime;
     return Column(
       children: [
         bookDates(bookModel),

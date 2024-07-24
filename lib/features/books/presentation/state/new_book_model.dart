@@ -1,16 +1,18 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
-import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
+import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:flutter/material.dart';
 
 class NewBookStateModel extends ChangeNotifier {
   final Book _book = Book.addBookInit();
 
+  final AddBookUseCase _addBookUseCase;
+  NewBookStateModel(this._addBookUseCase);
+  
   Book get book => _book;
 
   Future<bool> saveToDatabase() async {
     if(validateData()){
-      final bookRepository = BookRepository();
-      await bookRepository.addBook(_book);
+      await _addBookUseCase(_book);
       return true;
     }
     return false;

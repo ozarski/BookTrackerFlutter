@@ -1,3 +1,4 @@
+import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
 import 'package:book_tracker/features/books/presentation/widgets/add_book_date_pickers.dart';
 import 'package:book_tracker/features/books/presentation/widgets/status_selection_radio_buttons.dart';
@@ -10,8 +11,9 @@ class AddBookScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final addBookUseCase = context.read<AddBookUseCase>();
     return ChangeNotifierProvider(
-      create: (context) => NewBookStateModel(),
+      create: (context) => NewBookStateModel(addBookUseCase),
       child: Consumer<NewBookStateModel>(
         builder: (context, newBookModel, child) {
           

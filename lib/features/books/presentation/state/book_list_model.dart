@@ -1,13 +1,16 @@
 import 'dart:math';
 
-import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
+import 'package:book_tracker/features/books/domain/usecases/display_book_list.dart';
 import 'package:flutter/material.dart';
 
 class BookListModel extends ChangeNotifier {
+  final DisplayBookListUseCase _displayBookListUseCase;
   final List<Book> _books = [];
 
   List<Book> get books => _books;
+
+  BookListModel(this._displayBookListUseCase);
 
   void addBook(Book book) {
     _books.add(book);
@@ -24,8 +27,7 @@ class BookListModel extends ChangeNotifier {
   }
 
   void loadBooks() {
-    final repository = BookRepository();
-    repository.getBooks().then((value) {
+    _displayBookListUseCase().then((value) {
       _books.clear();
       _books.addAll(value);
       notifyListeners();

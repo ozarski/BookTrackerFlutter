@@ -26,4 +26,8 @@ class BookDatabase{
       BookDatabaseConstants.createBookTableQuery
     );
   }
+
+  Future<void> close() async {
+    await _database.close();
+  }
 }

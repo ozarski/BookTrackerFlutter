@@ -2,15 +2,18 @@ import 'package:book_tracker/core/errors/database_errors.dart';
 import 'package:book_tracker/features/books/data/data_sources/book_database.dart';
 import 'package:book_tracker/features/books/data/data_sources/book_database_constants.dart';
 import 'package:book_tracker/features/books/data/models/book_model.dart';
-import 'package:book_tracker/features/books/domain/entities/repositories/book_repository_interface.dart';
+import 'package:book_tracker/features/books/domain/repositories/book_repository_interface.dart';
 
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BookRepository implements BookRepositoryInterface {
+  final BookDatabase bookDB;
+  BookRepository(this.bookDB);
+
   @override
   Future<Book> addBook(Book book) async {
-    final db = await BookDatabase.instance.database;
+    final db = await bookDB.database;
     if(validateBook(book) == false){
       throw InvalidBookInputError('Invalid book input');
     }
@@ -22,7 +25,7 @@ class BookRepository implements BookRepositoryInterface {
 
   @override
   Future<void> deleteBook(int id) async {
-    final db = await BookDatabase.instance.database;
+    final db = await bookDB.database;
 
     final deletedBooks = await db.delete(
       BookDatabaseConstants.booksTableName,
@@ -37,7 +40,7 @@ class BookRepository implements BookRepositoryInterface {
 
   @override
   Future<Book> getBook(int id) async {
-    final db = await BookDatabase.instance.database;
+    final db = await bookDB.database;
     var maps = await db.query(
       BookDatabaseConstants.booksTableName,
       where: '${BookDatabaseConstants.columnId} = ?',
@@ -53,9 +56,9 @@ class BookRepository implements BookRepositoryInterface {
 
   @override
   Future<List<Book>> getBooks() async {
-    final db = BookDatabase.instance.database;
+    final db = await bookDB.database;
 
-    final List<Map<String, Object?>> bookMaps = await (await db).query(BookDatabaseConstants.booksTableName);
+    final List<Map<String, Object?>> bookMaps = await db.query(BookDatabaseConstants.booksTableName);
 
     return [
       for (final bookMap in bookMaps) BookModel.fromMap(bookMap)
@@ -67,7 +70,7 @@ class BookRepository implements BookRepositoryInterface {
     if(validateBook(book) == false){
       throw InvalidBookInputError('Invalid book input');
     }
-    final db = await BookDatabase.instance.database;
+    final db = await bookDB.database;
 
     var success = await db.update(
       BookDatabaseConstants.booksTableName,
