@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
@@ -16,7 +17,8 @@ class AddBookScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final addBookUseCase = context.read<AddBookUseCase>();
     return ChangeNotifierProvider(
-      create: (context) => ModifyBookStateModel(addBookUseCase, Book.addBookInit()),
+      create: (context) =>
+          ModifyBookStateModel(addBookUseCase, Book.addBookInit()),
       child: Consumer<ModifyBookStateModel>(
         builder: (context, newBookModel, child) {
           return Scaffold(
@@ -33,6 +35,14 @@ class AddBookScreen extends StatelessWidget {
                   endIndent: 10.0,
                 ),
               ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    //TODO: navigate to search screen
+                  },
+                ).addPadding(const EdgeInsets.only(right: 10)),
+              ],
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
