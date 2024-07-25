@@ -1,5 +1,5 @@
-import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
+import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:book_tracker/features/statistics/presentation/widgets/stat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,26 +7,25 @@ import 'package:provider/provider.dart';
 class StatsTab extends StatelessWidget {
   const StatsTab({super.key});
 
+  //TODO("replace placeholders with actual values")
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Consumer<BookListModel>(
-        builder: (context, model, child) {
-          var totalPages = model.books.fold(
-              0, (previousValue, element) => previousValue + element.pages);
+      child: Consumer<StatsStateModel>(
+        builder: (context, statsModel, child) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               StatWidget(
                 title: "total pages",
-                value: totalPages.toString(),
+                value: statsModel.stats['total pages'] ?? '0',
                 fontSize: 40.0,
               ).addPadding(const EdgeInsets.symmetric(vertical: 50)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  statsLeftColumn(model),
-                  statsRightColumn(model),
+                  statsLeftColumn(statsModel),
+                  statsRightColumn(statsModel),
                 ],
               ),
             ],
@@ -36,36 +35,29 @@ class StatsTab extends StatelessWidget {
     );
   }
 
-  //TODO("replace placeholders with actual values")
-  Widget statsLeftColumn(BookListModel bookListModel) {
-    var totalBooks = bookListModel.books.length;
+  Widget statsLeftColumn(StatsStateModel statsModel) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        StatWidget(title: "total books", value: totalBooks.toString())
+        StatWidget(title: "total books", value: statsModel.stats['total books'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
-        const StatWidget(title: "pages per day", value: "42")
+        StatWidget(title: "pages per day", value: statsModel.stats['pages per day'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
-        const StatWidget(title: "books per month", value: "2.4")
+        StatWidget(title: "books per month", value: statsModel.stats['books per month'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
       ],
     );
   }
 
-  Widget statsRightColumn(BookListModel bookListModel) {
-    var totalBooks = bookListModel.books.length;
-    var totalPages = bookListModel.books
-        .fold(0, (previousValue, element) => previousValue + element.pages);
-    var pagesPerbook = totalBooks == 0 ? 0 : totalPages / totalBooks;
+   Widget statsRightColumn(StatsStateModel statsModel) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        StatWidget(
-                title: "pages per book", value: pagesPerbook.toStringAsFixed(2))
+        StatWidget(title: "pages per book", value: statsModel.stats['pages per book'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
-        const StatWidget(title: "days per book", value: "12.7")
+        StatWidget(title: "days per book", value: statsModel.stats['days per book'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
-        const StatWidget(title: "books per week", value: "0.6")
+        StatWidget(title: "books per week", value: statsModel.stats['books per week'] ?? '0')
             .addPadding(const EdgeInsets.only(bottom: 25)),
       ],
     );

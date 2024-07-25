@@ -1,4 +1,4 @@
-import 'package:book_tracker/features/books/data/data_sources/book_database_constants.dart';
+import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

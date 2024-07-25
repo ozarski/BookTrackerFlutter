@@ -1,6 +1,6 @@
 import 'package:book_tracker/core/errors/database_errors.dart';
-import 'package:book_tracker/features/books/data/data_sources/book_database.dart';
-import 'package:book_tracker/features/books/data/data_sources/book_database_constants.dart';
+import 'package:book_tracker/core/data_sources/book_database.dart';
+import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:book_tracker/features/books/data/models/book_model.dart';
 import 'package:book_tracker/features/books/domain/repositories/book_repository_interface.dart';
 

@@ -8,6 +8,7 @@ import 'package:book_tracker/features/books/presentation/state/book_list_model.d
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/widgets/book_progress_slider.dart';
+import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,8 +50,8 @@ class BookDetailsScreen extends StatelessWidget {
                   color: Colors.black,
                   height: 4.0,
                   thickness: 0.5,
-                  indent: 0.0,
-                  endIndent: 0.0,
+                  indent: 10.0,
+                  endIndent: 10.0,
                 ),
               ),
               actions: [
@@ -120,6 +121,8 @@ class BookDetailsScreen extends StatelessWidget {
         if (bookModel.getBookStatus() == BookStatus.reading) {
           return changeStatusButton('Finish', context, bookModel, () {
             bookModel.setStatus(BookStatus.finished);
+            final statsModel = context.read<StatsStateModel>();
+            statsModel.reloadStats();
           });
         } else if (bookModel.getBookStatus() == BookStatus.wantToRead) {
           return changeStatusButton('Start reading', context, bookModel, () {
@@ -280,6 +283,8 @@ class BookDetailsScreen extends StatelessWidget {
                 bookModel.deleteBook();
                 final bookListModel = context.read<BookListModel>();
                 bookListModel.reloadBooks();
+                final statsModel = context.read<StatsStateModel>();
+                statsModel.reloadStats();
                 Navigator.of(context).pop();
                 deleted = true;
               },

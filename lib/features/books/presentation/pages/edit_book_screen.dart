@@ -4,6 +4,7 @@ import 'package:book_tracker/features/books/presentation/state/book_list_model.d
 import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
 import 'package:book_tracker/features/books/presentation/widgets/add_book_date_pickers.dart';
 import 'package:book_tracker/features/books/presentation/widgets/status_selection_radio_buttons.dart';
+import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +31,8 @@ class EditBookScreen extends StatelessWidget {
                   color: Colors.black,
                   height: 4.0,
                   thickness: 0.5,
-                  indent: 0.0,
-                  endIndent: 0.0,
+                  indent: 10.0,
+                  endIndent: 10.0,
                 ),
               ),
             ),
@@ -105,6 +106,8 @@ Widget actionButton(ModifyBookStateModel bookModel, BuildContext context) {
           if (context.mounted) {
             final bookListModel = context.read<BookListModel>();
             bookListModel.reloadBooks();
+            final statsModel = context.read<StatsStateModel>();
+            statsModel.reloadStats();
             Navigator.pop(context);
           }
         } else {

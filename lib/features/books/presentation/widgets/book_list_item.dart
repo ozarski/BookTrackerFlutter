@@ -8,33 +8,39 @@ class BookListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 0.5),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        title: Text(
-          _book.title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w300, color: Colors.black),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: Colors.black, width: 0.5),
         ),
-        subtitle: Text(
-          _book.author,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w300, color: Color.fromARGB(255, 45, 45, 45)),
+        elevation: 3,
+        color: Colors.white,
+        child: ListTile(
+          title: Text(
+            _book.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                fontWeight: FontWeight.w300, color: Colors.black),
+          ),
+          subtitle: Text(
+            _book.author,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                color: Color.fromARGB(255, 45, 45, 45)),
+          ),
+          //trailing: const Icon(Icons.info_outline),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+          onTap: () {
+            Navigator.pushNamed(context, '/book_details', arguments: {
+              'bookID': _book.id,
+            });
+          },
         ),
-        //trailing: const Icon(Icons.info_outline),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-        onTap: () {
-          Navigator.pushNamed(context, '/book_details', arguments: {
-            'bookID': _book.id,
-          });
-        },
       ),
     );
   }

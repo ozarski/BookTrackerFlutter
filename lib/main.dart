@@ -1,4 +1,4 @@
-import 'package:book_tracker/features/books/data/data_sources/book_database.dart';
+import 'package:book_tracker/core/data_sources/book_database.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
@@ -11,6 +11,9 @@ import 'package:book_tracker/features/books/presentation/pages/book_details_scre
 import 'package:book_tracker/core/pages/home_screen.dart';
 import 'package:book_tracker/features/books/presentation/pages/edit_book_screen.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
+import 'package:book_tracker/features/statistics/data/repositories/stats_repository.dart';
+import 'package:book_tracker/features/statistics/domain/usecases/get_stats.dart';
+import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +29,9 @@ void main() {
         ),
         ProxyProvider<BookDatabase, BookRepository>(
           update: (_, database, __) => BookRepository(database),
+        ),
+        ProxyProvider<BookDatabase, StatsRepository>(
+          update: (_, database, __) => StatsRepository(database),
         ),
         ProxyProvider<BookRepository, AddBookUseCase>(
           update: (_, repository, __) => AddBookUseCase(repository),
@@ -48,8 +54,14 @@ void main() {
         ProxyProvider<BookRepository, UpdateBookUseCase>(
           update: (_, repository, __) => UpdateBookUseCase(repository),
         ),
+        ProxyProvider<StatsRepository, GetStatsUseCase>(
+          update: (_, repository, __) => GetStatsUseCase(repository),
+        ),
         ChangeNotifierProvider<BookListModel>(
           create: (context) => BookListModel(context.read<DisplayBookListUseCase>()),
+        ),
+        ChangeNotifierProvider<StatsStateModel>(
+          create: (context) => StatsStateModel(context.read<GetStatsUseCase>()),
         ),
       ],
       child: const MainApp(),

@@ -42,6 +42,9 @@ class StartDatePickerWidget extends StatelessWidget {
         initialDate: bookModel.book.startDate,
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
+        builder: (BuildContext context, Widget? child) {
+          return datePickerTheme(child!);
+        },
       );
     } else if (bookModel.book.status == BookStatus.finished) {
       return await showDatePicker(
@@ -49,8 +52,24 @@ class StartDatePickerWidget extends StatelessWidget {
         initialDate: bookModel.book.startDate,
         firstDate: DateTime(2000),
         lastDate: bookModel.book.finishDate ?? DateTime(2101),
+        builder: (BuildContext context, Widget? child) {
+          return datePickerTheme(child!);
+        },
       );
     }
     return null;
+  }
+
+  Theme datePickerTheme(Widget child){
+    return Theme(
+      data: ThemeData.light().copyWith(
+        colorScheme: const ColorScheme.light(
+          primary: Colors.black,
+          onPrimary: Colors.white,
+        ),
+        dialogBackgroundColor: Colors.white,
+      ),
+      child: child
+    );
   }
 }

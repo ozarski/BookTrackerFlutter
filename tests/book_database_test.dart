@@ -1,7 +1,7 @@
 import 'package:book_tracker/core/errors/database_errors.dart';
 import 'package:book_tracker/core/utils/date_comparison_extension.dart';
-import 'package:book_tracker/features/books/data/data_sources/book_database.dart';
-import 'package:book_tracker/features/books/data/data_sources/book_database_constants.dart';
+import 'package:book_tracker/core/data_sources/book_database.dart';
+import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:book_tracker/features/books/data/models/book_model.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
@@ -11,7 +11,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 late BookRepository bookRepository;
 late BookDatabase bookDatabase;
 
-Future main() async {
+void main() {
   setUpAll(() async {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
