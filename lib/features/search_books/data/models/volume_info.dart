@@ -1,4 +1,5 @@
 import 'package:book_tracker/features/search_books/data/models/image_links.dart';
+import 'package:book_tracker/features/search_books/domain/entities/google_books_volume.dart';
 
 class VolumeInfo {
   String title;
@@ -29,5 +30,14 @@ class VolumeInfo {
       'pageCount': pageCount,
       'imageLinks': imageLinks?.toJson(),
     };
+  }
+
+  GoogleBooksVolume toEntity(){
+    return GoogleBooksVolume(
+      title: title,
+      authors: authors.join(', '),
+      thumbnail: imageLinks?.thumbnail ?? '',
+      pageCount: pageCount,
+    );
   }
 }

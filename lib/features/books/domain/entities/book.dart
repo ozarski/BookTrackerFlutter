@@ -9,6 +9,7 @@ class Book {
   DateTime? finishDate;
   int progress = 0;
   int id = -1;
+  String thumbnail = '';
 
   Book({
     required this.title,
@@ -19,10 +20,10 @@ class Book {
     this.finishDate,
     this.progress = 0,
     this.id = -1,
+    this.thumbnail = '',
   });
 
   void setStartDate(DateTime startDate) {
-    //TODO("Add better date validation");
     if (status != BookStatus.reading && status != BookStatus.finished) {
       return;
     }
