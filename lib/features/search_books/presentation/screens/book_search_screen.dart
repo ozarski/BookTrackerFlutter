@@ -1,5 +1,4 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
-import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/features/books/presentation/state/new_book_model.dart';
 import 'package:book_tracker/features/search_books/domain/usecases/display_volumes.dart';
 import 'package:book_tracker/features/search_books/presentation/state/volume_list_model.dart';

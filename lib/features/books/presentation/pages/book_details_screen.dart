@@ -1,4 +1,5 @@
 import 'package:book_tracker/core/utils/global_functions.dart';
+import 'package:book_tracker/core/widgets/book_cover_image.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
@@ -86,10 +87,14 @@ class BookDetailsScreen extends StatelessWidget {
                       Builder(
                         builder: (context) {
                           if (bookModel.getThumbnail().isNotEmpty) {
-                            return Image.network(
-                              bookModel.getThumbnail(),
-                              width: 200,
+                            return SizedBox(
                               height: 200,
+                              width: 200,
+                              child: BookCoverImage(
+                                  url: bookModel.getThumbnail(),
+                                  noConnectionIcon:
+                                      const Icon(Icons.book, size: 200),
+                                  imageSize: 200),
                             );
                           } else {
                             return const Icon(

@@ -6,6 +6,7 @@ import 'package:book_tracker/features/books/presentation/state/new_book_model.da
 import 'package:book_tracker/features/books/presentation/widgets/add_book_date_pickers.dart';
 import 'package:book_tracker/features/books/presentation/widgets/status_selection_radio_buttons.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,10 +46,28 @@ class AddBookScreen extends StatelessWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/search', arguments: {
-                      'bookModel': newBookModel,
-                    });
+                  onPressed: () async {
+                    var connection = await Connectivity().checkConnectivity();
+                    if (connection.contains(ConnectivityResult.wifi) ||
+                        connection.contains(ConnectivityResult.mobile)||
+                        connection.contains(ConnectivityResult.ethernet)||
+                        connection.contains(ConnectivityResult.bluetooth)) {
+                      if (context.mounted) {
+                        Navigator.pushNamed(context, '/search', arguments: {
+                          'bookModel': newBookModel,
+                        });
+                      }
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: 'No internet connection',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      return;
+                    }
                   },
                 ).addPadding(const EdgeInsets.only(right: 10)),
               ],

@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/widgets/book_cover_image.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:flutter/material.dart';
 
@@ -33,14 +34,23 @@ class BookListItem extends StatelessWidget {
                 fontWeight: FontWeight.w300,
                 color: Color.fromARGB(255, 45, 45, 45)),
           ),
-          leading: Builder(builder: (context) {
-            if(_book.thumbnail.isNotEmpty){
-              return Image.network(_book.thumbnail, height: 80,);
-            }
-            else{
-              return const Icon(Icons.book, size: 35);
-            }
-          },),
+          leading: Builder(
+            builder: (context) {
+              if (_book.thumbnail.isNotEmpty) {
+                return SizedBox(
+                  width: 40,
+                  height: 80,
+                  child: BookCoverImage(
+                    url: _book.thumbnail,
+                    noConnectionIcon: const Icon(Icons.book, size: 35),
+                    imageSize: 80,
+                  ),
+                );
+              } else {
+                return const Icon(Icons.book, size: 35);
+              }
+            },
+          ),
           onTap: () {
             Navigator.pushNamed(context, '/book_details', arguments: {
               'bookID': _book.id,
