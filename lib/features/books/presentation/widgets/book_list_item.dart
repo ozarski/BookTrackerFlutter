@@ -16,7 +16,7 @@ class BookListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           side: const BorderSide(color: Colors.black, width: 0.5),
         ),
-        elevation: 3,
+        elevation: 2,
         color: Colors.white,
         child: ListTile(
           title: Text(

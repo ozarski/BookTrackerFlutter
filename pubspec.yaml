@@ -10,6 +10,7 @@ dependencies:
   build_runner: ^2.4.11
   connectivity_plus: ^6.0.3
   dio: ^5.5.0+1
+  file_picker: ^8.0.6
   flutter:
     sdk: flutter
   fluttertoast: ^8.2.6
