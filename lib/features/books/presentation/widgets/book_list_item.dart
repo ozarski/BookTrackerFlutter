@@ -33,8 +33,14 @@ class BookListItem extends StatelessWidget {
                 fontWeight: FontWeight.w300,
                 color: Color.fromARGB(255, 45, 45, 45)),
           ),
-          //trailing: const Icon(Icons.info_outline),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+          leading: Builder(builder: (context) {
+            if(_book.thumbnail.isNotEmpty){
+              return Image.network(_book.thumbnail, height: 80,);
+            }
+            else{
+              return const Icon(Icons.book, size: 35);
+            }
+          },),
           onTap: () {
             Navigator.pushNamed(context, '/book_details', arguments: {
               'bookID': _book.id,

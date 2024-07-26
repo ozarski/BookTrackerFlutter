@@ -1,5 +1,6 @@
 import 'package:book_tracker/core/use_case.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
+import 'package:book_tracker/features/search_books/domain/entities/google_books_volume.dart';
 import 'package:flutter/material.dart';
 
 class ModifyBookStateModel extends ChangeNotifier {
@@ -17,6 +18,19 @@ class ModifyBookStateModel extends ChangeNotifier {
     }
     return false;
   }
+
+  void fromGoogleBooksVolume(GoogleBooksVolume volume){
+    _book.title = volume.title;
+    _book.author = volume.authors;
+    _book.pages = volume.pageCount;
+    _book.thumbnail = volume.thumbnail;
+    print(_book);
+    notifyListeners();
+  }
+
+  String getTitle() => _book.title;
+  String getAuthor() => _book.author;
+  int getNumberOfPages() => _book.pages;
 
   void setTitle(String title) {
     _book.title = title;

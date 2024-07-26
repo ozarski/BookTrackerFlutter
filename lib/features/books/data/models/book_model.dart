@@ -11,9 +11,11 @@ class BookModel extends Book {
     super.startDate,
     super.finishDate,
     int? progress,
+    String? thumbnail,
   }) : super(
           id: id ?? -1,
           progress: progress ?? 0,
+          thumbnail: thumbnail ?? '',
         );
 
   Map<String, Object?> toMap() {
@@ -26,6 +28,7 @@ class BookModel extends Book {
       BookDatabaseConstants.columnFinishDate:
           finishDate?.millisecondsSinceEpoch,
       BookDatabaseConstants.columnProgress: progress,
+      BookDatabaseConstants.columnThumbnail: thumbnail,
     };
   }
 
@@ -45,11 +48,12 @@ class BookModel extends Book {
           : DateTime.fromMillisecondsSinceEpoch(
               map[BookDatabaseConstants.columnFinishDate] as int),
       progress: map[BookDatabaseConstants.columnProgress] as int,
+      thumbnail: map[BookDatabaseConstants.columnThumbnail] as String?,
     );
   }
 
   factory BookModel.fromEntity(Book book) {
-    return BookModel(
+    var bookModel = BookModel(
       id: book.id,
       title: book.title,
       author: book.author,
@@ -58,6 +62,8 @@ class BookModel extends Book {
       startDate: book.startDate,
       finishDate: book.finishDate,
       progress: book.progress,
+      thumbnail: book.thumbnail,
     );
+    return bookModel;
   }
 }

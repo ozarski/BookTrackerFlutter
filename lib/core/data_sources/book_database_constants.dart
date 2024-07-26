@@ -11,6 +11,7 @@ abstract class BookDatabaseConstants {
   static const String columnStartDate = 'start_date';
   static const String columnFinishDate = 'finish_date';
   static const String columnProgress = 'progress';
+  static const String columnThumbnail = 'thumbnail';
 
   static const String createBookTableQuery = '''
     CREATE TABLE $booksTableName (
@@ -21,7 +22,8 @@ abstract class BookDatabaseConstants {
       $columnStatus INTEGER NOT NULL,
       $columnStartDate INTEGER,
       $columnFinishDate INTEGER,
-      $columnProgress INTEGER
+      $columnProgress INTEGER,
+      $columnThumbnail TEXT
     )
   ''';
 }

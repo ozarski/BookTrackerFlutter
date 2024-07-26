@@ -9,6 +9,7 @@ class Book {
   DateTime? finishDate;
   int progress = 0;
   int id = -1;
+  String thumbnail = '';
 
   Book({
     required this.title,
@@ -19,10 +20,10 @@ class Book {
     this.finishDate,
     this.progress = 0,
     this.id = -1,
+    this.thumbnail = '',
   });
 
   void setStartDate(DateTime startDate) {
-    //TODO("Add better date validation");
     if (status != BookStatus.reading && status != BookStatus.finished) {
       return;
     }
@@ -70,7 +71,7 @@ class Book {
   @override
   String toString() {
     return 'Book{\ntitle: $title, \nauthor: $author, \npages: $pages, '
-        '\nstatus: $status\nstartDate: $startDate, \nfinishDate: $finishDate\n}';
+        '\nstatus: $status\nstartDate: $startDate, \nfinishDate: $finishDate, \nthumbnail: $thumbnail}';
   }
 
   static Book addBookInit() {
@@ -88,6 +89,7 @@ class Book {
     DateTime? finishDate,
     int? progress,
     int? id,
+    String? thumbnail,
   }) {
     return Book(
       title: title ?? this.title,
@@ -98,6 +100,7 @@ class Book {
       finishDate: finishDate ?? this.finishDate,
       progress: progress ?? this.progress,
       id: id ?? this.id,
+      thumbnail: thumbnail ?? this.thumbnail,
     );
   }
 }
