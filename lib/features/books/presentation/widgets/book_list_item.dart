@@ -35,13 +35,12 @@ class BookListItem extends StatelessWidget {
           ),
           leading: Builder(builder: (context) {
             if(_book.thumbnail.isNotEmpty){
-              return Image.network(_book.thumbnail, width: 50, height: 50,);
+              return Image.network(_book.thumbnail, height: 80,);
             }
             else{
-              return const Icon(Icons.book, size: 50,);
+              return const Icon(Icons.book, size: 35);
             }
           },),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
           onTap: () {
             Navigator.pushNamed(context, '/book_details', arguments: {
               'bookID': _book.id,

@@ -61,11 +61,26 @@ class BookStateModel extends ChangeNotifier {
     return book?.id ?? 0;
   }
 
+  String getThumbnail() {
+    return book?.thumbnail ?? '';
+  }
+
   String getFormattedStartDate() {
     if (book == null) return '';
     return book?.startDate != null
         ? DateFormat('dd.MM.yyyy').format(book!.startDate!)
         : '';
+  }
+
+  String getEstimatedReadingTime(){
+    if (book == null) return '';
+    if(book?.pages == null || book?.pages == 0) return '';
+    if(book?.progress == null) return '';
+    if(book?.progress == 0) return '';
+    final pagesToRead = book!.pages - book!.progress;
+    final readingTimeSoFar = book!.startDate != null ? DateTime.now().difference(book!.startDate!).inDays + 1 : Duration.zero.inDays + 1;
+    final days = (readingTimeSoFar / book!.progress * pagesToRead).ceil();
+    return '$days days';
   }
 
   String getFormattedFinishDate() {

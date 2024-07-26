@@ -83,6 +83,22 @@ class BookDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      Builder(
+                        builder: (context) {
+                          if (bookModel.getThumbnail().isNotEmpty) {
+                            return Image.network(
+                              bookModel.getThumbnail(),
+                              width: 200,
+                              height: 200,
+                            );
+                          } else {
+                            return const Icon(
+                              Icons.book,
+                              size: 200,
+                            );
+                          }
+                        },
+                      ).addPadding(const EdgeInsets.only(top: 20)),
                       basicBookInfo(bookModel),
                       Builder(
                         builder: (context) {
@@ -139,14 +155,18 @@ class BookDetailsScreen extends StatelessWidget {
       children: [
         Text(
           bookModel.getBookTitle(),
-          style: const TextStyle(fontSize: 35),
+          style: const TextStyle(fontSize: 25),
           textAlign: TextAlign.center,
-        ).addPadding(const EdgeInsets.only(
-          top: 40,
-          bottom: 5,
-          left: 20,
-          right: 20,
-        )),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ).addPadding(
+          const EdgeInsets.only(
+            top: 10,
+            bottom: 5,
+            left: 20,
+            right: 20,
+          ),
+        ),
         Text(
           'by ${bookModel.getBookAuthor()}',
           style: const TextStyle(fontSize: 20),
@@ -158,10 +178,6 @@ class BookDetailsScreen extends StatelessWidget {
           indent: 20,
           endIndent: 20,
         ),
-        Text(bookModel.getBookStatus().toString(),
-                style: const TextStyle(fontSize: 20))
-            .addPadding(const EdgeInsets.only(top: 20)),
-        const Text('status'),
         Text(bookModel.getBookPages().toString(),
                 style: const TextStyle(fontSize: 20))
             .addPadding(const EdgeInsets.only(top: 20)),
@@ -210,6 +226,10 @@ class BookDetailsScreen extends StatelessWidget {
           .addPadding(const EdgeInsets.only(top: 20)),
       const Text('start date'),
       bookProgress(bookModel),
+      Text(bookModel.getEstimatedReadingTime(),
+              style: const TextStyle(fontSize: 20))
+          .addPadding(const EdgeInsets.only(top: 10)),
+      const Text('estimated time left'),
     ]);
   }
 
