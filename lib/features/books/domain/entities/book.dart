@@ -71,7 +71,7 @@ class Book {
   @override
   String toString() {
     return 'Book{\ntitle: $title, \nauthor: $author, \npages: $pages, '
-        '\nstatus: $status\nstartDate: $startDate, \nfinishDate: $finishDate\n}';
+        '\nstatus: $status\nstartDate: $startDate, \nfinishDate: $finishDate, \nthumbnail: $thumbnail}';
   }
 
   static Book addBookInit() {
@@ -89,6 +89,7 @@ class Book {
     DateTime? finishDate,
     int? progress,
     int? id,
+    String? thumbnail,
   }) {
     return Book(
       title: title ?? this.title,
@@ -99,6 +100,7 @@ class Book {
       finishDate: finishDate ?? this.finishDate,
       progress: progress ?? this.progress,
       id: id ?? this.id,
+      thumbnail: thumbnail ?? this.thumbnail,
     );
   }
 }

@@ -16,11 +16,18 @@ class AddBookScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addBookUseCase = context.read<AddBookUseCase>();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController authorController = TextEditingController();
+    TextEditingController pagesController = TextEditingController();
+
     return ChangeNotifierProvider(
       create: (context) =>
           ModifyBookStateModel(addBookUseCase, Book.addBookInit()),
       child: Consumer<ModifyBookStateModel>(
         builder: (context, newBookModel, child) {
+          titleController.text = newBookModel.getTitle();
+          authorController.text = newBookModel.getAuthor();
+          pagesController.text = newBookModel.getNumberOfPages().toString();
           return Scaffold(
             appBar: AppBar(
               title: const Text('Add Book',
@@ -39,7 +46,9 @@ class AddBookScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    //TODO: navigate to search screen
+                    Navigator.pushNamed(context, '/search', arguments: {
+                      'bookModel': newBookModel,
+                    });
                   },
                 ).addPadding(const EdgeInsets.only(right: 10)),
               ],
@@ -84,6 +93,7 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
+                      controller: titleController,
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('title'),
                       onChanged: (title) {
@@ -95,6 +105,7 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
+                      controller: authorController,
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('author'),
                       onChanged: (author) {
@@ -106,6 +117,7 @@ class AddBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextField(
+                      controller: pagesController,
                       cursorColor: Colors.black,
                       decoration: textFieldDecoration('pages'),
                       keyboardType: TextInputType.number,

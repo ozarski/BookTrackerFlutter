@@ -16,9 +16,9 @@ class VolumeInfo {
 
   factory VolumeInfo.fromJson(Map<String, dynamic> json) {
     return VolumeInfo(
-      title: json['title'],
-      authors: List<String>.from(json['authors']),
-      pageCount: json['pageCount'],
+      title: json['title'] ?? '',
+      authors: List<String>.from(json['authors'] ?? []),
+      pageCount: json['pageCount'] ?? 0,
       imageLinks: json['imageLinks'] != null ? ImageLinks.fromJson(json['imageLinks']) : null,
     );
   }

@@ -14,6 +14,7 @@ import 'package:book_tracker/features/books/presentation/state/book_list_model.d
 import 'package:book_tracker/features/search_books/data/data_sources/google_books_api_service.dart';
 import 'package:book_tracker/features/search_books/data/repositories/google_books_repository.dart';
 import 'package:book_tracker/features/search_books/domain/usecases/display_volumes.dart';
+import 'package:book_tracker/features/search_books/presentation/screens/book_search_screen.dart';
 import 'package:book_tracker/features/statistics/data/repositories/stats_repository.dart';
 import 'package:book_tracker/features/statistics/domain/usecases/get_stats.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
@@ -95,6 +96,7 @@ class MainApp extends StatelessWidget {
         '/add_book': (BuildContext context) => const AddBookScreen(),
         '/book_details': (BuildContext context) => const BookDetailsScreen(),
         '/edit_book': (BuildContext context) => const EditBookScreen(),
+        '/search': (BuildContext context) => const BookSearchScreen(),
       },
       theme: ThemeData(
         textTheme:
