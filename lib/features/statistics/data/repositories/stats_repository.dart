@@ -39,20 +39,14 @@ class StatsRepository implements StatsRepositoryInterface {
 
   @override
   Future<double> getBooksPerMonth() async {
-    var db = await database.database;
-
-    var query = 'SELECT COUNT(*)'
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
-
-    var result = await db.rawQuery(query);
-    if(result.first.values.first == null) {
-      return 0;
-    }
-
+    final booksCount = await getBooksCount();
     final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
     final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
 
-    final booksCount = result.first.values.first as int;
+    if(totalReadingTime == 0) {
+      return 0;
+    }
+
     final booksPerDay = booksCount / totalReadingTime;
 
     return booksPerDay * 30;
@@ -60,20 +54,15 @@ class StatsRepository implements StatsRepositoryInterface {
 
   @override
   Future<double> getBooksPerWeek() async {
-    var db = await database.database;
-
-    var query = 'SELECT COUNT(*)'
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
-
-    var result = await db.rawQuery(query);
-    if(result.first.values.first == null) {
-      return 0;
-    }
+    final booksCount = await getBooksCount();
 
     final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
     final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
 
-    final booksCount = result.first.values.first as int;
+    if(totalReadingTime == 0) {
+      return 0;
+    }
+
     final booksPerDay = booksCount / totalReadingTime;
 
     return booksPerDay * 7;
@@ -99,6 +88,10 @@ class StatsRepository implements StatsRepositoryInterface {
     final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
     final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
 
+    if(totalReadingTime == 0) {
+      return 0;
+    }
+
     return totalPages / totalReadingTime;
   }
 
@@ -115,20 +108,14 @@ class StatsRepository implements StatsRepositoryInterface {
 
   @override
   Future<double> getBooksPerYear() async {
-    var db = await database.database;
-
-    var query = 'SELECT COUNT(*)'
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
-
-    var result = await db.rawQuery(query);
-    if(result.first.values.first == null) {
-      return 0;
-    }
+    final booksCount = await getBooksCount();
 
     final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
     final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
+    if(totalReadingTime == 0) {
+      return 0;
+    }
 
-    final booksCount = result.first.values.first as int;
     final booksPerDay = booksCount / totalReadingTime;
 
     return booksPerDay * 365;
