@@ -12,11 +12,12 @@ class GetStatsUseCase implements UseCaseNoParams<Map<String, String>>{
     var stats = <String, String>{
       'total pages': (await statsRepository.getTotalPages()).toString(),
       'total books': (await statsRepository.getBooksCount()).toString(),
-      'pages per day': (await statsRepository.getPagesPerDay()).toStringAsFixed(2),
-      'books per month': (await statsRepository.getBooksPerMonth()).toStringAsFixed(2),
-      'pages per book': (await statsRepository.getPagesPerBook()).toStringAsFixed(2),
-      'days per book': (await statsRepository.getAverageReadingTime()).toStringAsFixed(2),
-      'books per week': (await statsRepository.getBooksPerWeek()).toStringAsFixed(2),
+      'pages per day': (await statsRepository.getPagesPerDay()).toStringAsFixed(0),
+      'books per month': (await statsRepository.getBooksPerMonth()).toStringAsFixed(1),
+      'pages per book': (await statsRepository.getPagesPerBook()).toStringAsFixed(0),
+      'days per book': (await statsRepository.getAverageReadingTime()).toStringAsFixed(1),
+      'books per week': (await statsRepository.getBooksPerWeek()).toStringAsFixed(1),
+      'books per year': (await statsRepository.getBooksPerYear()).toStringAsFixed(1),
     };
 
     return stats;

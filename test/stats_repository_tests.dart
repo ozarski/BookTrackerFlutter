@@ -68,6 +68,11 @@ void main() {
     double booksPerWeek = await statsRepository.getBooksPerWeek();
     expect(booksPerWeek, closeTo(0.6, 0.01));
   });
+
+  test('getBooksPerYear', () async {
+    double booksPerYear = await statsRepository.getBooksPerYear();
+    expect(booksPerYear, closeTo(31.28, 0.01));
+  });
 }
 
 Future<List<Book>> generateMockBooks() async {

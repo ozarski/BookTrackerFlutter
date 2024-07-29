@@ -55,24 +55,10 @@ class StatsTab extends StatelessWidget {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    statContainer(
-                      Column(
-                        children: [
-                          const Text('Books per week',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20)),
-                          Text(statsModel.stats['books per week'] ?? '0',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 19)),
-                        ],
-                      ).addPadding(const EdgeInsets.all(20)),
-                      context,
-                      Theme.of(context).colorScheme.tertiary,
-                    ).addPadding(
-                      const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
-                    ),
+                    booksPerYear(context, statsModel),
+                    booksPerWeek(context, statsModel)
                   ],
                 )
               ],
@@ -123,7 +109,7 @@ class StatsTab extends StatelessWidget {
     return statContainer(
       Column(
         children: [
-          const Text('Pages per Book',
+          const Text('Pages per book',
               style: TextStyle(color: Colors.white, fontSize: 20)),
           Text(statsModel.stats['pages per book'] ?? '0',
               style: const TextStyle(color: Colors.white, fontSize: 19)),
@@ -140,7 +126,7 @@ class StatsTab extends StatelessWidget {
     return statContainer(
       Column(
         children: [
-          const Text('Days per Book',
+          const Text('Days per book',
               style: TextStyle(color: Colors.white, fontSize: 20)),
           Text(statsModel.stats['days per book'] ?? '0',
               style: const TextStyle(color: Colors.white, fontSize: 19)),
@@ -176,7 +162,7 @@ class StatsTab extends StatelessWidget {
       context,
       const Color.fromARGB(116, 252, 230, 108),
     ).addPadding(
-      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+      const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
     );
   }
 
@@ -193,6 +179,46 @@ class StatsTab extends StatelessWidget {
             ),
           ).addPadding(const EdgeInsets.only(right: 10)),
           Text(statsModel.stats['books per month'] ?? '0',
+              style: const TextStyle(color: Colors.white, fontSize: 23)),
+        ],
+      ).addPadding(const EdgeInsets.all(20)),
+      context,
+      Theme.of(context).colorScheme.tertiary,
+    ).addPadding(
+      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+    );
+  }
+
+  Widget booksPerWeek(BuildContext context, StatsStateModel statsModel) {
+    return statContainer(
+      Column(
+        children: [
+          const Text('Books per week',
+              style: TextStyle(color: Colors.white, fontSize: 20)),
+          Text(statsModel.stats['books per week'] ?? '0',
+              style: const TextStyle(color: Colors.white, fontSize: 19)),
+        ],
+      ).addPadding(const EdgeInsets.all(20)),
+      context,
+      Theme.of(context).colorScheme.tertiary,
+    ).addPadding(
+      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+    );
+  }
+
+  Widget booksPerYear(BuildContext context, StatsStateModel statsModel) {
+    return statContainer(
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 80,
+            child: Text(
+              'Books per year',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ).addPadding(const EdgeInsets.only(right: 0)),
+          Text(statsModel.stats['books per year'] ?? '0',
               style: const TextStyle(color: Colors.white, fontSize: 23)),
         ],
       ).addPadding(const EdgeInsets.all(20)),

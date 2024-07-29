@@ -104,4 +104,19 @@ class StatsRepository implements StatsRepositoryInterface {
     );
     return Sqflite.firstIntValue(result) ?? 0;
   }
+
+  @override
+  Future<double> getBooksPerYear() async {
+    var db = await database.database;
+
+    var query = 'SELECT (COUNT(*)/SUM( '
+        '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0)) * 365 '
+        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
+
+    var result = await db.rawQuery(query);
+    if(result.first.values.first == null) {
+      return 0;
+    }
+    return result.first.values.first as double;
+  }
 }
