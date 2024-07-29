@@ -13,6 +13,11 @@ abstract class BookDatabaseConstants {
   static const String columnProgress = 'progress';
   static const String columnThumbnail = 'thumbnail';
 
+  static const String readingTimeTableName = 'reading_time';
+  static const String columnDate = 'date';
+  static const String columnBookId = 'book_id';
+
+
   static const String createBookTableQuery = '''
     CREATE TABLE $booksTableName (
       $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +29,14 @@ abstract class BookDatabaseConstants {
       $columnFinishDate INTEGER,
       $columnProgress INTEGER,
       $columnThumbnail TEXT
+    )
+  ''';
+
+  static const String createReadingTimeTableQuery = '''
+    CREATE TABLE $readingTimeTableName (
+      $columnDate INTEGER NOT NULL,
+      $columnBookId INTEGER NOT NULL,
+      FOREIGN KEY ($columnBookId) REFERENCES $booksTableName($columnId)
     )
   ''';
 }
