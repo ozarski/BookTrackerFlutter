@@ -40,6 +40,7 @@ class BookDetailsScreen extends StatelessWidget {
       child: Consumer<BookStateModel>(
         builder: (context, bookModel, child) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Theme.of(context).colorScheme.secondary,
             appBar: AppBar(
               title: const Text(
@@ -100,7 +101,7 @@ class BookDetailsScreen extends StatelessWidget {
                             return finishedBookDetails(bookModel);
                           } else if (bookModel.getBookStatus() ==
                               BookStatus.reading) {
-                            return readingBookDetails(bookModel);
+                            return readingBookDetails(bookModel, context);
                           } else {
                             return Container();
                           }
@@ -216,14 +217,14 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget readingBookDetails(BookStateModel bookModel) {
+  Widget readingBookDetails(BookStateModel bookModel, BuildContext context) {
     return Column(children: [
       Text(
         bookModel.getFormattedStartDate(),
         style: const TextStyle(fontSize: 20, color: Colors.black),
       ).addPadding(const EdgeInsets.only(top: 20)),
       const Text('start date', style: TextStyle(color: Colors.black)),
-      bookProgress(bookModel),
+      bookProgress(bookModel, context),
       Text(
         bookModel.getEstimatedReadingTime(),
         style: const TextStyle(fontSize: 20, color: Colors.black),
@@ -232,24 +233,67 @@ class BookDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  Widget bookProgress(BookStateModel bookModel) {
+  Widget bookProgress(BookStateModel bookModel, BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('pages read', style: TextStyle(color: Colors.black)),
-            Text(
-              bookModel.getBookProgress().toString(),
-              style: const TextStyle(fontSize: 20, color: Colors.black),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ).addPadding(const EdgeInsets.only(top: 40)),
+        InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text('pages read', style: TextStyle(color: Colors.black)),
+              Text(
+                bookModel.getBookProgress().toString(),
+                style: const TextStyle(fontSize: 20, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ).addPadding(const EdgeInsets.only(top: 40)),
+          onTap: () {
+            updateProgressDialog(context, bookModel);
+          },
+        ),
         const BookProgressSlider(),
       ],
     );
+  }
+
+  void updateProgressDialog(BuildContext context, BookStateModel bookModel) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          var controller = TextEditingController(
+              text: bookModel.getBookProgress().toString());
+          return AlertDialog(
+            title: Text('Set pages read', style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary)),
+            content: 
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Pages read',
+              ),
+              style: const TextStyle(color: Colors.white),
+              cursorColor: Colors.white,
+            ),
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  bookModel.updateProgress(int.parse(controller.text));
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Set'),
+              ),
+            ],
+          );
+        });
   }
 
   Widget changeStatusButton(String label, BuildContext context,
@@ -286,7 +330,8 @@ class BookDetailsScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete book', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+          title: Text('Delete book',
+              style: TextStyle(color: Theme.of(context).colorScheme.primary)),
           content: const Text('Are you sure?', style: TextStyle(fontSize: 17)),
           backgroundColor: Theme.of(context).colorScheme.secondary,
           actionsPadding: const EdgeInsets.only(right: 20, bottom: 10),
@@ -296,7 +341,9 @@ class BookDetailsScreen extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(foregroundColor: Colors.black),
-              child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+              child: Text('Cancel',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             TextButton(
               onPressed: () {
