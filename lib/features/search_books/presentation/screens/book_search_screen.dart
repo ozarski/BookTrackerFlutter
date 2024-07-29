@@ -15,18 +15,9 @@ class BookSearchScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Books'),
+        title: const Text('Search Books',
+            style: TextStyle(fontWeight: FontWeight.w300)),
         scrolledUnderElevation: 0.0,
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(4.0),
-          child: Divider(
-            color: Colors.black,
-            height: 4.0,
-            thickness: 0.5,
-            indent: 10.0,
-            endIndent: 10.0,
-          ),
-        ),
       ),
       body: Center(
         child: ChangeNotifierProvider<VolumeListModel>(
@@ -36,67 +27,103 @@ class BookSearchScreen extends StatelessWidget {
             builder: (context, volumeListModel, child) {
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Search for books',
-                            border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 1.0),
+                  Container(
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              hintText: 'Search for books',
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 1.0),
+                              ),
                             ),
+                            cursorColor: Colors.white,
+                            style: const TextStyle(color: Colors.white),
+                            onChanged: (value) => query = value,
                           ),
-                          onChanged: (value) => query = value,
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          if (query.isNotEmpty) {
-                            volumeListModel.loadVolumes(query);
-                          }
-                          else{
-                            Fluttertoast.showToast(msg: 'Please enter a search query');
-                          }
-                        },
-                        icon: const Icon(Icons.search, size: 40),
-                      ).addPadding(const EdgeInsets.only(left: 10)),
-                    ],
-                  ).addPadding(
-                    const EdgeInsets.only(
-                        top: 20, bottom: 20, left: 10, right: 10),
+                        IconButton(
+                          onPressed: () {
+                            if (query.isNotEmpty) {
+                              volumeListModel.loadVolumes(query);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: 'Please enter a search query');
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.search,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ).addPadding(const EdgeInsets.only(left: 10)),
+                      ],
+                    ).addPadding(
+                      const EdgeInsets.only(
+                          top: 20, bottom: 20, left: 10, right: 10),
+                    ),
                   ),
                   Expanded(
                     child: ListView.builder(
                       itemCount: volumeListModel.volumes.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(volumeListModel.volumes[index].title, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                          subtitle: Text(volumeListModel.volumes[index].authors, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              var routeArgs = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-                              var newBookModel = routeArgs['bookModel'] as ModifyBookStateModel;
-                              newBookModel.fromGoogleBooksVolume(volumeListModel.volumes[index]);
-                              Navigator.pop(context);
-                            },
+                        return Card(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          leading: Builder(
-                            builder: (context) {
-                              if (volumeListModel.volumes[index].thumbnail.isNotEmpty) {
-                                return Image.network(
-                                  volumeListModel.volumes[index].thumbnail,
-                                  width: 50,
-                                  height: 50,
-                                );
-                              } else {
-                                return const Icon(Icons.book, size: 50,);
-                              }
-                            },
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.only(right: 5, left: 5),
+                            visualDensity: const VisualDensity(vertical: 2),
+                            title: Text(
+                              volumeListModel.volumes[index].title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              volumeListModel.volumes[index].authors,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.add, size: 35),
+                              onPressed: () {
+                                var routeArgs = ModalRoute.of(context)!
+                                    .settings
+                                    .arguments as Map<String, dynamic>;
+                                var newBookModel = routeArgs['bookModel']
+                                    as ModifyBookStateModel;
+                                newBookModel.fromGoogleBooksVolume(
+                                    volumeListModel.volumes[index]);
+                                Navigator.pop(context);
+                              },
+                            ),
+                            leading: Builder(
+                              builder: (context) {
+                                if (volumeListModel
+                                    .volumes[index].thumbnail.isNotEmpty) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      volumeListModel.volumes[index].thumbnail,
+                                      fit: BoxFit.cover,
+                                    )
+                                  );
+                                } else {
+                                  return const Icon(
+                                    Icons.book,
+                                    size: 45,
+                                  );
+                                }
+                              },
+                            ).addPadding(const EdgeInsets.only(left: 5)),
                           ),
-                        );
+                        ).addPadding(
+                            const EdgeInsets.symmetric(horizontal: 10));
                       },
                     ),
                   ),

@@ -18,6 +18,7 @@ import 'package:book_tracker/features/search_books/presentation/screens/book_sea
 import 'package:book_tracker/features/statistics/data/repositories/stats_repository.dart';
 import 'package:book_tracker/features/statistics/domain/usecases/get_stats.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
+import 'package:book_tracker/theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,8 @@ void main() {
           update: (_, repository, __) => DisplayVolumesUseCase(repository),
         ),
         ChangeNotifierProvider<BookListModel>(
-          create: (context) => BookListModel(context.read<DisplayBookListUseCase>()),
+          create: (context) =>
+              BookListModel(context.read<DisplayBookListUseCase>()),
         ),
         ChangeNotifierProvider<StatsStateModel>(
           create: (context) => StatsStateModel(context.read<GetStatsUseCase>()),
@@ -98,36 +100,12 @@ class MainApp extends StatelessWidget {
         '/edit_book': (BuildContext context) => const EditBookScreen(),
         '/search': (BuildContext context) => const BookSearchScreen(),
       },
-      theme: ThemeData(
-        textTheme:
-            const TextTheme(bodyMedium: TextStyle(fontWeight: FontWeight.w300)),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black, width: 1.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 1.3)),
-          hintStyle: TextStyle(color: Colors.grey),
-          labelStyle: TextStyle(color: Colors.grey),
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            side: BorderSide(color: Colors.black, width: 0.3),
-          ),
-          elevation: 4,
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-        ),
-      ),
+      theme: appTheme,
       home: const DefaultTabController(
         length: 2,
         child: HomeScreen(),
       ),
-     debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

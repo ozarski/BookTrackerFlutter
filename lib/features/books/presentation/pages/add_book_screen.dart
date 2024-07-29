@@ -33,24 +33,14 @@ class AddBookScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Add Book',
                   style: TextStyle(fontWeight: FontWeight.w300)),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(4.0),
-                child: Divider(
-                  color: Colors.black,
-                  height: 4.0,
-                  thickness: 0.5,
-                  indent: 10.0,
-                  endIndent: 10.0,
-                ),
-              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () async {
                     var connection = await Connectivity().checkConnectivity();
                     if (connection.contains(ConnectivityResult.wifi) ||
-                        connection.contains(ConnectivityResult.mobile)||
-                        connection.contains(ConnectivityResult.ethernet)||
+                        connection.contains(ConnectivityResult.mobile) ||
+                        connection.contains(ConnectivityResult.ethernet) ||
                         connection.contains(ConnectivityResult.bluetooth)) {
                       if (context.mounted) {
                         Navigator.pushNamed(context, '/search', arguments: {
@@ -77,6 +67,8 @@ class AddBookScreen extends StatelessWidget {
             floatingActionButton: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                splashColor: const Color.fromARGB(60, 70, 70, 70),
                 onPressed: () async {
                   if (await newBookModel.saveToDatabase()) {
                     if (context.mounted) {
@@ -97,63 +89,68 @@ class AddBookScreen extends StatelessWidget {
                         fontSize: 16.0);
                   }
                 },
-                child: const Text('Save',
+                child: Text('Save',
                     style: TextStyle(
                         fontSize: 20,
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.w300)),
               ),
             ),
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: TextField(
-                      controller: titleController,
-                      cursorColor: Colors.black,
-                      decoration: textFieldDecoration('title'),
-                      onChanged: (title) {
-                        newBookModel.setTitle(title);
-                      },
+              child: Scaffold(
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: TextField(
+                        controller: titleController,
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('title'),
+                        style: const TextStyle(color: Colors.white),
+                        onChanged: (title) {
+                          newBookModel.setTitle(title);
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: TextField(
-                      controller: authorController,
-                      cursorColor: Colors.black,
-                      decoration: textFieldDecoration('author'),
-                      onChanged: (author) {
-                        newBookModel.setAuthor(author);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: TextField(
+                        controller: authorController,
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('author'),
+                        style: const TextStyle(color: Colors.white),
+                        onChanged: (author) {
+                          newBookModel.setAuthor(author);
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: TextField(
-                      controller: pagesController,
-                      cursorColor: Colors.black,
-                      decoration: textFieldDecoration('pages'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (numberOfPages) {
-                        if (numberOfPages != "") {
-                          newBookModel
-                              .setNumberOfPages(int.parse(numberOfPages));
-                        }
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: TextField(
+                        controller: pagesController,
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('pages'),
+                        keyboardType: TextInputType.number,
+                        style: const TextStyle(color: Colors.white),
+                        onChanged: (numberOfPages) {
+                          if (numberOfPages != "") {
+                            newBookModel
+                                .setNumberOfPages(int.parse(numberOfPages));
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: StatusSelectionRadioButtons(),
-                  ),
-                  const NewBookDates(),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: StatusSelectionRadioButtons(),
+                    ),
+                    const NewBookDates(),
+                  ],
+                ),
               ),
             ),
           );
@@ -164,6 +161,12 @@ class AddBookScreen extends StatelessWidget {
 
   InputDecoration textFieldDecoration(String labelText) {
     return InputDecoration(
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      border: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+      ),
       labelText: labelText,
     );
   }

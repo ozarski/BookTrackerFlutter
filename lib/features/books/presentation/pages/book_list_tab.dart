@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:book_tracker/core/data_sources/book_database.dart';
+import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
@@ -22,16 +23,15 @@ class BookListTab extends StatelessWidget {
           child: Consumer<BookListModel>(
             builder: (context, model, child) {
               return Scaffold(
+                backgroundColor: const Color(0xFF1F1E22),
                 appBar: AppBar(
-                  title: const Text('Your books'),
-                  bottom: const PreferredSize(
-                    preferredSize: Size.fromHeight(4.0),
-                    child: Divider(
-                      color: Colors.black,
-                      height: 4.0,
-                      thickness: 0.5,
-                      indent: 10.0,
-                      endIndent: 10.0,
+                  title: const Text('Your books',
+                      style: TextStyle(fontWeight: FontWeight.w300)),
+                  scrolledUnderElevation: 0.0,
+                  backgroundColor: const Color(0xFFFCE76C),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
                     ),
                   ),
                   actions: [
@@ -42,48 +42,63 @@ class BookListTab extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return SimpleDialog(
-                                title: const Text('Settings'),
-                                backgroundColor: Colors.white,
+                                title: Text(
+                                  'Settings',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.secondary,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  Column(
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
                                           _exportDatabase(context);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          elevation: 3,
+                                          elevation: 2,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20),
-                                            side: const BorderSide(
-                                                color: Colors.black,
-                                                width: 0.3),
                                           ),
-                                          backgroundColor: Colors.white,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
-                                        child: const Text('Export database', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                                        child: const Text(
+                                          'Export database',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w300),
+                                        ),
                                       ),
                                       ElevatedButton(
                                         onPressed: () async {
                                           _importDatabase(context);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          elevation: 3,
+                                          elevation: 2,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(20),
-                                            side: const BorderSide(
-                                                color: Colors.black,
-                                                width: 0.3),
                                           ),
-                                          backgroundColor: Colors.white,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                         ),
-                                        child: const Text('Import database', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),),
+                                        child: const Text(
+                                          'Import database',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w300),
+                                        ),
                                       )
                                     ],
-                                  ).addPadding(const EdgeInsets.symmetric(horizontal: 10, vertical: 5)),
+                                  ).addPadding(const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5)),
                                 ],
                               );
                             });
@@ -113,7 +128,8 @@ class BookListTab extends StatelessWidget {
     String? outputDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (outputDirectory != null) {
-      databaseFile.copy('$outputDirectory/book_tracker.db');
+      databaseFile
+          .copy('$outputDirectory/${BookDatabaseConstants.databaseName}');
     }
   }
 
@@ -128,10 +144,12 @@ class BookListTab extends StatelessWidget {
       File file = File(result.files.single.path!);
       await file.copy(databaseFile.path);
       try {
-        final bookListModel = context.read<BookListModel>();
-        final statsModel = context.read<StatsStateModel>();
-        bookListModel.reloadBooks();
-        statsModel.reloadStats();
+        if (context.mounted) {
+          final bookListModel = context.read<BookListModel>();
+          final statsModel = context.read<StatsStateModel>();
+          bookListModel.reloadBooks();
+          statsModel.reloadStats();
+        }
       } catch (e) {
         kDebugMode ? print(e) : null;
       }

@@ -57,22 +57,25 @@ class StatusSelectionRadioButtonsState
         setState(() => status = targetStatus);
         book.setStatus(targetStatus);
       },
-      child: Row(
-        children: [
-          Radio<BookStatus>(
-            value: targetStatus,
-            groupValue: status,
-            onChanged: (status) {
-              setState(() => status = status);
-              book.setStatus(status!);
-            },
-            activeColor: Colors.black,
-          ),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.black),
-          ),
-        ],
+      child: Theme(
+        data: ThemeData.dark(),
+        child: Row(
+          children: [
+            Radio<BookStatus>(
+              value: targetStatus,
+              groupValue: status,
+              onChanged: (status) {
+                setState(() => status = status);
+                book.setStatus(status!);
+              },
+              activeColor: Colors.white,
+            ),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

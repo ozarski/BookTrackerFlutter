@@ -44,31 +44,33 @@ class EditBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.black,
+                      cursorColor: Colors.white,
                       decoration: textFieldDecoration('title'),
                       onChanged: (title) {
                         bookModel.setTitle(title);
                       },
                       initialValue: book.title,
+                      style: const TextStyle(color: Colors.white)
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.black,
+                      cursorColor: Colors.white,
                       decoration: textFieldDecoration('author'),
                       onChanged: (author) {
                         bookModel.setAuthor(author);
                       },
                       initialValue: book.author,
+                      style: const TextStyle(color: Colors.white)
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.black,
+                      cursorColor: Colors.white,
                       decoration: textFieldDecoration('pages'),
                       keyboardType: TextInputType.number,
                       onChanged: (numberOfPages) {
@@ -77,6 +79,7 @@ class EditBookScreen extends StatelessWidget {
                         }
                       },
                       initialValue: book.pages.toString(),
+                      style: const TextStyle(color: Colors.white)
                     ),
                   ),
                   const Padding(
@@ -101,6 +104,8 @@ Widget actionButton(ModifyBookStateModel bookModel, BuildContext context) {
   return SizedBox(
     width: MediaQuery.of(context).size.width * 0.9,
     child: FloatingActionButton(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      splashColor: const Color.fromARGB(62, 68, 68, 68),
       onPressed: () async {
         if (await bookModel.saveToDatabase()) {
           if (context.mounted) {
@@ -121,9 +126,9 @@ Widget actionButton(ModifyBookStateModel bookModel, BuildContext context) {
               fontSize: 16.0);
         }
       },
-      child: const Text('Save',
+      child: Text('Save',
           style: TextStyle(
-              fontSize: 20, color: Colors.black, fontWeight: FontWeight.w300)),
+              fontSize: 20, color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w300)),
     ),
   );
 }

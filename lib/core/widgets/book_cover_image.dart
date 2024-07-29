@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 class BookCoverImage extends StatefulWidget {
   final String url;
   final Widget noConnectionIcon;
-  final double imageSize;
 
-  const BookCoverImage({super.key, required this.url, required this.noConnectionIcon, required this.imageSize});
+  const BookCoverImage({
+    super.key,
+    required this.url,
+    required this.noConnectionIcon,
+  });
 
   @override
   State<BookCoverImage> createState() => _BookCoverImageState();
@@ -24,9 +27,9 @@ class _BookCoverImageState extends State<BookCoverImage> {
   Future<bool> checkConnection() async {
     var connection = await (Connectivity().checkConnectivity());
     return (connection.contains(ConnectivityResult.wifi) ||
-                        connection.contains(ConnectivityResult.mobile)||
-                        connection.contains(ConnectivityResult.ethernet)||
-                        connection.contains(ConnectivityResult.bluetooth));
+        connection.contains(ConnectivityResult.mobile) ||
+        connection.contains(ConnectivityResult.ethernet) ||
+        connection.contains(ConnectivityResult.bluetooth));
   }
 
   @override
@@ -43,10 +46,10 @@ class _BookCoverImageState extends State<BookCoverImage> {
           if (isConnected) {
             return Image.network(
               widget.url,
-              height: widget.imageSize,
               errorBuilder: (context, error, stackTrace) {
                 return widget.noConnectionIcon;
               },
+              fit: BoxFit.cover,
             );
           } else {
             return Center(child: widget.noConnectionIcon);

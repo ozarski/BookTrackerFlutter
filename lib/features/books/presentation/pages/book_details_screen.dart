@@ -40,20 +40,11 @@ class BookDetailsScreen extends StatelessWidget {
       child: Consumer<BookStateModel>(
         builder: (context, bookModel, child) {
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
             appBar: AppBar(
               title: const Text(
                 'Book Details',
                 style: TextStyle(fontWeight: FontWeight.w300),
-              ),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(4.0),
-                child: Divider(
-                  color: Colors.black,
-                  height: 4.0,
-                  thickness: 0.5,
-                  indent: 10.0,
-                  endIndent: 10.0,
-                ),
               ),
               actions: [
                 IconButton(
@@ -76,7 +67,8 @@ class BookDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            body: Center(
+            body: Container(
+              color: Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -84,27 +76,23 @@ class BookDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Builder(
-                        builder: (context) {
-                          if (bookModel.getThumbnail().isNotEmpty) {
-                            return SizedBox(
-                              height: 200,
-                              width: 200,
-                              child: BookCoverImage(
-                                  url: bookModel.getThumbnail(),
-                                  noConnectionIcon:
-                                      const Icon(Icons.book, size: 200),
-                                  imageSize: 200),
-                            );
-                          } else {
-                            return const Icon(
-                              Icons.book,
-                              size: 200,
-                            );
-                          }
-                        },
-                      ).addPadding(const EdgeInsets.only(top: 20)),
-                      basicBookInfo(bookModel),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary,
+                          borderRadius: const BorderRadius.vertical(
+                            bottom: Radius.circular(20),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            bookCoverImage(bookModel),
+                            basicBookInfo(bookModel, context),
+                          ],
+                        ),
+                      ),
+                      numberOfPages(bookModel),
                       Builder(
                         builder: (context) {
                           if (bookModel.getBookStatus() ==
@@ -155,7 +143,7 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget basicBookInfo(BookStateModel bookModel) {
+  Widget basicBookInfo(BookStateModel bookModel, BuildContext context) {
     return Column(
       children: [
         Text(
@@ -177,16 +165,17 @@ class BookDetailsScreen extends StatelessWidget {
           style: const TextStyle(fontSize: 20),
           textAlign: TextAlign.center,
         ).addPadding(const EdgeInsets.only(bottom: 20)),
-        const Divider(
-          color: Colors.black,
-          thickness: 0.5,
-          indent: 20,
-          endIndent: 20,
-        ),
+      ],
+    );
+  }
+
+  Widget numberOfPages(BookStateModel bookModel) {
+    return Column(
+      children: [
         Text(bookModel.getBookPages().toString(),
-                style: const TextStyle(fontSize: 20))
+                style: const TextStyle(fontSize: 20, color: Colors.black))
             .addPadding(const EdgeInsets.only(top: 20)),
-        const Text('number of pages'),
+        const Text('number of pages', style: TextStyle(color: Colors.black)),
       ],
     );
   }
@@ -194,14 +183,16 @@ class BookDetailsScreen extends StatelessWidget {
   Widget bookDates(BookStateModel bookModel) {
     return Column(
       children: [
-        Text(bookModel.getFormattedStartDate(),
-                style: const TextStyle(fontSize: 20))
-            .addPadding(const EdgeInsets.only(top: 20)),
-        const Text('start date'),
-        Text(bookModel.getFormattedFinishDate(),
-                style: const TextStyle(fontSize: 20))
-            .addPadding(const EdgeInsets.only(top: 20)),
-        const Text('finish date'),
+        Text(
+          bookModel.getFormattedStartDate(),
+          style: const TextStyle(fontSize: 20, color: Colors.black),
+        ).addPadding(const EdgeInsets.only(top: 20)),
+        const Text('start date', style: TextStyle(color: Colors.black)),
+        Text(
+          bookModel.getFormattedFinishDate(),
+          style: const TextStyle(fontSize: 20, color: Colors.black),
+        ).addPadding(const EdgeInsets.only(top: 20)),
+        const Text('finish date', style: TextStyle(color: Colors.black)),
       ],
     );
   }
@@ -216,25 +207,28 @@ class BookDetailsScreen extends StatelessWidget {
     return Column(
       children: [
         bookDates(bookModel),
-        Text(bookPagesPerDay.toStringAsFixed(2),
-                style: const TextStyle(fontSize: 20))
-            .addPadding(const EdgeInsets.only(top: 20)),
-        const Text('pages per day'),
+        Text(
+          bookPagesPerDay.toStringAsFixed(2),
+          style: const TextStyle(fontSize: 20, color: Colors.black),
+        ).addPadding(const EdgeInsets.only(top: 20)),
+        const Text('pages per day', style: TextStyle(color: Colors.black)),
       ],
     );
   }
 
   Widget readingBookDetails(BookStateModel bookModel) {
     return Column(children: [
-      Text(bookModel.getFormattedStartDate(),
-              style: const TextStyle(fontSize: 20))
-          .addPadding(const EdgeInsets.only(top: 20)),
-      const Text('start date'),
+      Text(
+        bookModel.getFormattedStartDate(),
+        style: const TextStyle(fontSize: 20, color: Colors.black),
+      ).addPadding(const EdgeInsets.only(top: 20)),
+      const Text('start date', style: TextStyle(color: Colors.black)),
       bookProgress(bookModel),
-      Text(bookModel.getEstimatedReadingTime(),
-              style: const TextStyle(fontSize: 20))
-          .addPadding(const EdgeInsets.only(top: 10)),
-      const Text('estimated time left'),
+      Text(
+        bookModel.getEstimatedReadingTime(),
+        style: const TextStyle(fontSize: 20, color: Colors.black),
+      ).addPadding(const EdgeInsets.only(top: 10)),
+      const Text('estimated time left', style: TextStyle(color: Colors.black)),
     ]);
   }
 
@@ -245,10 +239,10 @@ class BookDetailsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('pages read'),
+            const Text('pages read', style: TextStyle(color: Colors.black)),
             Text(
               bookModel.getBookProgress().toString(),
-              style: const TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20, color: Colors.black),
               textAlign: TextAlign.center,
             ),
           ],
@@ -270,15 +264,14 @@ class BookDetailsScreen extends StatelessWidget {
           elevation: 3,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: const BorderSide(color: Colors.black, width: 0.3),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         child: Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w300,
           ),
         ).addPadding(const EdgeInsets.symmetric(vertical: 10)),
@@ -293,15 +286,17 @@ class BookDetailsScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete book'),
+          title: Text('Delete book', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
           content: const Text('Are you sure?', style: TextStyle(fontSize: 17)),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          actionsPadding: const EdgeInsets.only(right: 20, bottom: 10),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(foregroundColor: Colors.black),
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
             TextButton(
               onPressed: () {
@@ -325,5 +320,34 @@ class BookDetailsScreen extends StatelessWidget {
       },
     );
     return deleted;
+  }
+
+  Widget bookCoverImage(BookStateModel bookModel) {
+    return Builder(
+      builder: (context) {
+        if (bookModel.getThumbnail().isNotEmpty) {
+          return SizedBox(
+            height: 250,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: BookCoverImage(
+                url: bookModel.getThumbnail(),
+                noConnectionIcon: const Icon(Icons.book, size: 200),
+              ),
+            ),
+          );
+        } else {
+          return const Icon(
+            Icons.book,
+            size: 200,
+          );
+        }
+      },
+    ).addPadding(
+      const EdgeInsets.only(
+        top: 20,
+        bottom: 20,
+      ),
+    );
   }
 }

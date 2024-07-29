@@ -7,13 +7,14 @@ class MainTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.black, width: 0.5),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
-        color: Colors.white,
       ),
       child: TabBar(
+        dividerColor: Theme.of(context).colorScheme.primary,
         tabs: [
           const Tab(
               icon: Icon(
@@ -25,8 +26,7 @@ class MainTabBar extends StatelessWidget {
         ],
         indicatorColor: Colors.black,
         labelColor: Colors.black,
-        indicatorPadding: const EdgeInsets.only(bottom: 3),
-        unselectedLabelColor: Colors.grey,
+        unselectedLabelColor: const Color.fromARGB(255, 131, 135, 102),
       ),
     );
   }
