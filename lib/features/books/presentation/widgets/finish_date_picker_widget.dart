@@ -44,8 +44,27 @@ class FinishDatePickerWidget extends StatelessWidget {
         initialDate: bookModel.book.finishDate,
         firstDate: bookModel.book.startDate ?? DateTime.now(),
         lastDate: DateTime(2101),
+        builder: (BuildContext context, Widget? child) {
+          return datePickerTheme(child!, context);
+        },
       );
     }
     return null;
+  }
+
+  Theme datePickerTheme(Widget child, BuildContext context) {
+    return Theme(
+      data: ThemeData.light().copyWith(
+        colorScheme: ColorScheme.light(
+          primary: Theme.of(context).colorScheme.primary,
+          onPrimary: Colors.black,
+          surface: Theme.of(context).colorScheme.secondary,
+          onSurface: Colors.white,
+        ),
+        dialogBackgroundColor: Theme.of(context).colorScheme.secondary,
+        scaffoldBackgroundColor: Theme.of(context).colorScheme.secondary,
+      ),
+      child: child
+    );
   }
 }

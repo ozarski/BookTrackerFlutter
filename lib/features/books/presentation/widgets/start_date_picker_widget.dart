@@ -43,7 +43,7 @@ class StartDatePickerWidget extends StatelessWidget {
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
         builder: (BuildContext context, Widget? child) {
-          return datePickerTheme(child!);
+          return datePickerTheme(child!, context);
         },
       );
     } else if (bookModel.book.status == BookStatus.finished) {
@@ -53,21 +53,24 @@ class StartDatePickerWidget extends StatelessWidget {
         firstDate: DateTime(2000),
         lastDate: bookModel.book.finishDate ?? DateTime(2101),
         builder: (BuildContext context, Widget? child) {
-          return datePickerTheme(child!);
+          return datePickerTheme(child!, context);
         },
       );
     }
     return null;
   }
 
-  Theme datePickerTheme(Widget child){
+  Theme datePickerTheme(Widget child, BuildContext context) {
     return Theme(
       data: ThemeData.light().copyWith(
-        colorScheme: const ColorScheme.light(
-          primary: Colors.black,
-          onPrimary: Colors.white,
+        colorScheme: ColorScheme.light(
+          primary: Theme.of(context).colorScheme.primary,
+          onPrimary: Colors.black,
+          surface: Theme.of(context).colorScheme.secondary,
+          onSurface: Colors.white,
         ),
-        dialogBackgroundColor: Colors.white,
+        dialogBackgroundColor: Theme.of(context).colorScheme.secondary,
+        scaffoldBackgroundColor: Theme.of(context).colorScheme.secondary,
       ),
       child: child
     );

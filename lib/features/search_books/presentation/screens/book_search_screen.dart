@@ -83,14 +83,23 @@ class BookSearchScreen extends StatelessWidget {
                               volumeListModel.volumes[index].title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
                             subtitle: Text(
                               volumeListModel.volumes[index].authors,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
                             trailing: IconButton(
                               icon: const Icon(Icons.add, size: 35),
+                              color: Colors.white,
                               onPressed: () {
                                 var routeArgs = ModalRoute.of(context)!
                                     .settings
