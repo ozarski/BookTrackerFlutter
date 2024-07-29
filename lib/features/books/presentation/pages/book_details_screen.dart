@@ -234,6 +234,7 @@ class BookDetailsScreen extends StatelessWidget {
   }
 
   Widget bookProgress(BookStateModel bookModel, BuildContext context) {
+    final BookListModel bookListModel = context.read<BookListModel>();
     return Column(
       children: [
         InkWell(
@@ -253,21 +254,24 @@ class BookDetailsScreen extends StatelessWidget {
             updateProgressDialog(context, bookModel);
           },
         ),
-        const BookProgressSlider(),
+        BookProgressSlider(listModel: bookListModel),
       ],
     );
   }
 
   void updateProgressDialog(BuildContext context, BookStateModel bookModel) {
+    final bookListModel = context.read<BookListModel>();
     showDialog(
         context: context,
         builder: (context) {
           var controller = TextEditingController(
               text: bookModel.getBookProgress().toString());
           return AlertDialog(
-            title: Text('Set pages read', style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.primary)),
-            content: 
-            TextField(
+            title: Text('Set pages read',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.primary)),
+            content: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
@@ -286,7 +290,8 @@ class BookDetailsScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  bookModel.updateProgress(int.parse(controller.text));
+                  bookModel.saveProgress(int.parse(controller.text));
+                  bookListModel.updateBook(bookModel.book!);
                   Navigator.of(context).pop();
                 },
                 child: const Text('Set'),
@@ -298,11 +303,13 @@ class BookDetailsScreen extends StatelessWidget {
 
   Widget changeStatusButton(String label, BuildContext context,
       BookStateModel bookModel, Function onPressed) {
+    final BookListModel bookListModel = context.read<BookListModel>();
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
       child: ElevatedButton(
         onPressed: () {
           onPressed();
+          bookListModel.updateBook(bookModel.book!);
         },
         style: ElevatedButton.styleFrom(
           elevation: 3,

@@ -24,12 +24,19 @@ class BookListModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reloadBooks() {
-    _loadBooks();
+  void updateBook(Book book) {
+    int index = _books.indexWhere((element) => element.id == book.id);
+    _books[index] = book;
+    notifyListeners();
   }
 
-  void _loadBooks() {
-    _displayBookListUseCase().then((value) {
+  void reloadBooks() {
+    _loadBooks();
+    notifyListeners();
+  }
+
+  void _loadBooks() async {
+    await _displayBookListUseCase().then((value) {
       _books.clear();
       _books.addAll(value);
       notifyListeners();

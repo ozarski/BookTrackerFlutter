@@ -23,7 +23,7 @@ class BookRepository implements BookRepositoryInterface {
     bookModel.id = await db.insert('books', bookModel.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     if(book.status == BookStatus.finished) {
-      ReadingTimeRepository(bookDB).addReadingTimeForBook(book);
+      ReadingTimeRepository(bookDB).addReadingTimeForBook(bookModel);
     }
     return bookModel;
   }

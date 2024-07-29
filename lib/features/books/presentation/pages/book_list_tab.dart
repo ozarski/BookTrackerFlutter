@@ -8,6 +8,7 @@ import 'package:book_tracker/features/statistics/presentation/state/stats_model.
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/book_list_item.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,8 @@ class BookListTab extends StatelessWidget {
                                 title: Text(
                                   'Settings',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.w300,
                                   ),
                                 ),
@@ -128,8 +130,21 @@ class BookListTab extends StatelessWidget {
     String? outputDirectory = await FilePicker.platform.getDirectoryPath();
 
     if (outputDirectory != null) {
-      databaseFile
-          .copy('$outputDirectory/${BookDatabaseConstants.databaseName}');
+      try {
+        databaseFile
+            .copy('$outputDirectory/${BookDatabaseConstants.databaseName}');
+      } catch (exception) {
+        kDebugMode ? print(exception) : null;
+        Fluttertoast.showToast(
+          msg: 'An error occurred while exporting the database',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     }
   }
 
@@ -152,6 +167,15 @@ class BookListTab extends StatelessWidget {
         }
       } catch (e) {
         kDebugMode ? print(e) : null;
+        Fluttertoast.showToast(
+          msg: 'An error occurred while importing the database',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     }
   }

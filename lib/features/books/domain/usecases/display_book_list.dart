@@ -9,6 +9,21 @@ class DisplayBookListUseCase implements UseCaseNoParams<List<Book>> {
 
   @override
   Future<List<Book>> call() async {
-    return await repository.getBooks();
+    final books = await repository.getBooks();
+    return sortBooks(books);
+  }
+
+  List<Book> sortBooks(List<Book> books) {
+    var finishedBooks = books.where((book) => book.status == BookStatus.finished).toList();
+    var readingBooks = books.where((book) => book.status == BookStatus.reading).toList();
+    var wantToReadBooks = books.where((book) => book.status == BookStatus.wantToRead).toList();
+
+    finishedBooks.sort((book1, book2) => book1.finishDate!.compareTo(book2.finishDate!));
+    finishedBooks = finishedBooks.reversed.toList();
+    readingBooks.sort((book1, book2) => book1.startDate!.compareTo(book2.startDate!));
+    readingBooks = readingBooks.reversed.toList();
+    wantToReadBooks.sort((book1, book2) => book1.title.compareTo(book2.title));
+
+    return [...readingBooks, ...finishedBooks, ...wantToReadBooks];
   }
 }

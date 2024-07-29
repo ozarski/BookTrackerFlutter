@@ -1,9 +1,11 @@
+import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BookProgressSlider extends StatefulWidget {
-  const BookProgressSlider({super.key});
+  const BookProgressSlider({super.key, required this.listModel});
+  final BookListModel listModel;
 
   @override
   State<BookProgressSlider> createState() => _BookProgressSliderState();
@@ -32,6 +34,7 @@ class _BookProgressSliderState extends State<BookProgressSlider> {
                 },
                 onChangeEnd: (value) {
                   bookModel.saveProgress(value.toInt());
+                  widget.listModel.updateBook(bookModel.book!);
                 },
                 label: bookModel.book!.progress.toString(),
                 thumbColor: Colors.black,

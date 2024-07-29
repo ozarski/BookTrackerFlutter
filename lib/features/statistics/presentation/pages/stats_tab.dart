@@ -50,8 +50,8 @@ class StatsTab extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    pagesPerDay(context, statsModel),
                     booksPerMonth(context, statsModel),
+                    pagesPerDay(context, statsModel),
                   ],
                 ),
                 Row(
@@ -70,21 +70,23 @@ class StatsTab extends StatelessWidget {
   }
 
   Widget totalBooks(BuildContext context, StatsStateModel statsModel) {
-    return statContainer(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Books',
-              style: TextStyle(color: Colors.white, fontSize: 35)),
-          Text(statsModel.stats['total books'] ?? '0',
-              style: const TextStyle(color: Colors.white, fontSize: 25)),
-        ],
-      ).addPadding(const EdgeInsets.all(20)),
-      context,
-      Theme.of(context).colorScheme.tertiary,
-    ).addPadding(
-      const EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 10),
+    return Expanded(
+      child: statContainer(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Books',
+                style: TextStyle(color: Colors.white, fontSize: 35)),
+            Text(statsModel.stats['total books'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 25)),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        Theme.of(context).colorScheme.tertiary,
+      ).addPadding(
+        const EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 10),
+      ),
     );
   }
 
@@ -123,23 +125,25 @@ class StatsTab extends StatelessWidget {
   }
 
   Widget daysPerBook(BuildContext context, StatsStateModel statsModel) {
-    return statContainer(
-      Column(
-        children: [
-          const Text('Days per book',
-              style: TextStyle(color: Colors.white, fontSize: 20)),
-          Text(statsModel.stats['days per book'] ?? '0',
-              style: const TextStyle(color: Colors.white, fontSize: 19)),
-        ],
-      ).addPadding(const EdgeInsets.all(20)),
-      context,
-      Theme.of(context).colorScheme.tertiary,
-    ).addPadding(
-      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+    return Expanded(
+      child: statContainer(
+        Column(
+          children: [
+            const Text('Days per book',
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+            Text(statsModel.stats['days per book'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 19)),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        Theme.of(context).colorScheme.tertiary,
+      ).addPadding(
+        const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+      ),
     );
   }
 
-  Widget booksPerMonth(BuildContext context, StatsStateModel statsModel) {
+  Widget pagesPerDay(BuildContext context, StatsStateModel statsModel) {
     return statContainer(
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,30 +166,33 @@ class StatsTab extends StatelessWidget {
       context,
       const Color.fromARGB(116, 252, 230, 108),
     ).addPadding(
-      const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
+      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
     );
   }
 
-  Widget pagesPerDay(BuildContext context, StatsStateModel statsModel) {
-    return statContainer(
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const SizedBox(
-            width: 90,
-            child: Text(
-              'Books per month',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ).addPadding(const EdgeInsets.only(right: 10)),
-          Text(statsModel.stats['books per month'] ?? '0',
-              style: const TextStyle(color: Colors.white, fontSize: 23)),
-        ],
-      ).addPadding(const EdgeInsets.all(20)),
-      context,
-      Theme.of(context).colorScheme.tertiary,
-    ).addPadding(
-      const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+  Widget booksPerMonth(BuildContext context, StatsStateModel statsModel) {
+    return Expanded(
+      child: statContainer(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              width: 90,
+              child: Text(
+                'Books per month',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ).addPadding(const EdgeInsets.only(right: 10)),
+            Text(statsModel.stats['books per month'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 23)),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        Theme.of(context).colorScheme.tertiary,
+      ).addPadding(
+        const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
+      ),
     );
   }
 
@@ -207,25 +214,28 @@ class StatsTab extends StatelessWidget {
   }
 
   Widget booksPerYear(BuildContext context, StatsStateModel statsModel) {
-    return statContainer(
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            width: 80,
-            child: Text(
-              'Books per year',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ).addPadding(const EdgeInsets.only(right: 0)),
-          Text(statsModel.stats['books per year'] ?? '0',
-              style: const TextStyle(color: Colors.white, fontSize: 23)),
-        ],
-      ).addPadding(const EdgeInsets.all(20)),
-      context,
-      Theme.of(context).colorScheme.tertiary,
-    ).addPadding(
-      const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
+    return Expanded(
+      child: statContainer(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              width: 80,
+              child: Text(
+                'Books per year',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ).addPadding(const EdgeInsets.only(right: 0)),
+            Text(statsModel.stats['books per year'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 23)),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        Theme.of(context).colorScheme.tertiary,
+      ).addPadding(
+        const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
+      ),
     );
   }
 
