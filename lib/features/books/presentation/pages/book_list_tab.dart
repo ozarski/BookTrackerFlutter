@@ -157,7 +157,19 @@ class BookListTab extends StatelessWidget {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      await file.copy(databaseFile.path);
+      await file.copy("${databaseFile.path}.test.db");
+      if(!await BookDatabase.instance.importedDatabaseSchemaCheck("${databaseFile.path}.test.db")){
+        Fluttertoast.showToast(
+          msg: 'This is not a valid database file',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+
       try {
         if (context.mounted) {
           final bookListModel = context.read<BookListModel>();
