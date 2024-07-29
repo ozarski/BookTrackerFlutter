@@ -2,6 +2,7 @@ import 'package:book_tracker/core/errors/database_errors.dart';
 import 'package:book_tracker/core/data_sources/book_database.dart';
 import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:book_tracker/features/books/data/models/book_model.dart';
+import 'package:book_tracker/features/books/data/repositories/reading_time_repository.dart';
 import 'package:book_tracker/features/books/domain/repositories/book_repository_interface.dart';
 
 import 'package:book_tracker/features/books/domain/entities/book.dart';
@@ -14,12 +15,16 @@ class BookRepository implements BookRepositoryInterface {
   @override
   Future<Book> addBook(Book book) async {
     final db = await bookDB.database;
-    if(validateBook(book) == false){
+    if (validateBook(book) == false) {
       throw InvalidBookInputError('Invalid book input');
     }
-    var bookModel = BookModel.fromEntity(book); 
+    var bookModel = BookModel.fromEntity(book);
 
-    bookModel.id = await db.insert('books', bookModel.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    bookModel.id = await db.insert('books', bookModel.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    if(book.status == BookStatus.finished) {
+      ReadingTimeRepository(bookDB).addReadingTimeForBook(book);
+    }
     return bookModel;
   }
 
@@ -36,6 +41,8 @@ class BookRepository implements BookRepositoryInterface {
     if (deletedBooks == 0) {
       throw ObjectNotFoundError('Book not found');
     }
+
+    ReadingTimeRepository(bookDB).deleteReadingTimeForBook(id);
   }
 
   @override
@@ -58,16 +65,15 @@ class BookRepository implements BookRepositoryInterface {
   Future<List<Book>> getBooks() async {
     final db = await bookDB.database;
 
-    final List<Map<String, Object?>> bookMaps = await db.query(BookDatabaseConstants.booksTableName);
+    final List<Map<String, Object?>> bookMaps =
+        await db.query(BookDatabaseConstants.booksTableName);
 
-    return [
-      for (final bookMap in bookMaps) BookModel.fromMap(bookMap)
-    ];
+    return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
   }
 
   @override
   Future<Book> updateBook(Book book) async {
-    if(validateBook(book) == false){
+    if (validateBook(book) == false) {
       throw InvalidBookInputError('Invalid book input');
     }
     final db = await bookDB.database;
@@ -82,23 +88,34 @@ class BookRepository implements BookRepositoryInterface {
     if (success == 0) {
       throw ObjectNotFoundError('Book not found');
     }
+
+    ReadingTimeRepository(bookDB).deleteReadingTimeForBook(book.id);
+    if (book.status == BookStatus.finished) {
+      ReadingTimeRepository(bookDB).addReadingTimeForBook(book);
+    }
+
     return book;
   }
 
-  bool validateBook(Book book){
-    if(book.title.isEmpty || book.author.isEmpty || book.pages <= 0){
+  bool validateBook(Book book) {
+    if (book.title.isEmpty || book.author.isEmpty || book.pages <= 0) {
       return false;
     }
-    if(book.status == BookStatus.finished && (book.finishDate == null || book.startDate == null)){
+    if (book.status == BookStatus.finished &&
+        (book.finishDate == null || book.startDate == null)) {
       return false;
     }
-    if(book.status == BookStatus.reading && (book.startDate == null || book.finishDate != null)){
+    if (book.status == BookStatus.reading &&
+        (book.startDate == null || book.finishDate != null)) {
       return false;
     }
-    if(book.status == BookStatus.wantToRead && (book.startDate != null || book.finishDate != null)){
+    if (book.status == BookStatus.wantToRead &&
+        (book.startDate != null || book.finishDate != null)) {
       return false;
     }
-    if(book.startDate != null && book.finishDate != null && book.startDate!.isAfter(book.finishDate!)){
+    if (book.startDate != null &&
+        book.finishDate != null &&
+        book.startDate!.isAfter(book.finishDate!)) {
       return false;
     }
     return true;

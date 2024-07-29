@@ -1,5 +1,7 @@
 import 'package:book_tracker/core/data_sources/book_database.dart';
 import 'package:book_tracker/core/data_sources/book_database_constants.dart';
+import 'package:book_tracker/features/books/data/repositories/reading_time_repository.dart';
+import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/statistics/domain/repositories/stats_repository_interface.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,7 +16,7 @@ class StatsRepository implements StatsRepositoryInterface {
 
     var result = await db.rawQuery(
       'SELECT COUNT(*) FROM ${BookDatabaseConstants.booksTableName} '
-      'WHERE ${BookDatabaseConstants.columnStatus} = \'1\'',
+      'WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\'',
     );
 
     return Sqflite.firstIntValue(result) ?? 0;
@@ -26,7 +28,7 @@ class StatsRepository implements StatsRepositoryInterface {
 
     var query = 'SELECT (SUM('
         '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0'
-        ')/COUNT(*)) FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\'';
+        ')/COUNT(*)) FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\'';
 
     var result = await db.rawQuery(query);
     if(result.first.values.first == null) {
@@ -39,30 +41,42 @@ class StatsRepository implements StatsRepositoryInterface {
   Future<double> getBooksPerMonth() async {
     var db = await database.database;
 
-    var query = 'SELECT (COUNT(*)/SUM( '
-        '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0)) * 30 '
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
+    var query = 'SELECT COUNT(*)'
+        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
 
     var result = await db.rawQuery(query);
     if(result.first.values.first == null) {
       return 0;
     }
-    return result.first.values.first as double;
+
+    final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
+    final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
+
+    final booksCount = result.first.values.first as int;
+    final booksPerDay = booksCount / totalReadingTime;
+
+    return booksPerDay * 30;
   }
 
   @override
   Future<double> getBooksPerWeek() async {
     var db = await database.database;
 
-    var query = 'SELECT (COUNT(*)/SUM( '
-        '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0)) * 7 '
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
+    var query = 'SELECT COUNT(*)'
+        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
 
     var result = await db.rawQuery(query);
     if(result.first.values.first == null) {
       return 0;
     }
-    return result.first.values.first as double;
+
+    final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
+    final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
+
+    final booksCount = result.first.values.first as int;
+    final booksPerDay = booksCount / totalReadingTime;
+
+    return booksPerDay * 7;
   }
 
   @override
@@ -70,7 +84,7 @@ class StatsRepository implements StatsRepositoryInterface {
     var db = await database.database;
 
     var query = 'SELECT (CAST(SUM(${BookDatabaseConstants.columnPages}) as REAL)/COUNT(*)) '
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
+        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
 
     var result = await db.rawQuery(query);
     if(result.first.values.first == null) {
@@ -81,17 +95,11 @@ class StatsRepository implements StatsRepositoryInterface {
 
   @override
   Future<double> getPagesPerDay() async {
-    var db = await database.database;
+    final totalPages = await getTotalPages();
+    final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
+    final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
 
-    var query = 'SELECT (CAST(SUM(${BookDatabaseConstants.columnPages}) as REAL)/SUM( '
-        '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0)) '
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
-
-    var result = await db.rawQuery(query);
-    if(result.first.values.first == null) {
-      return 0;
-    }
-    return result.first.values.first as double;
+    return totalPages / totalReadingTime;
   }
 
   @override
@@ -100,7 +108,7 @@ class StatsRepository implements StatsRepositoryInterface {
 
     var result = await db.rawQuery(
       'SELECT SUM(${BookDatabaseConstants.columnPages}) FROM ${BookDatabaseConstants.booksTableName} '
-      'WHERE ${BookDatabaseConstants.columnStatus} = \'1\'',
+      'WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\'',
     );
     return Sqflite.firstIntValue(result) ?? 0;
   }
@@ -109,14 +117,20 @@ class StatsRepository implements StatsRepositoryInterface {
   Future<double> getBooksPerYear() async {
     var db = await database.database;
 
-    var query = 'SELECT (COUNT(*)/SUM( '
-        '((${BookDatabaseConstants.columnFinishDate} - ${BookDatabaseConstants.columnStartDate})/1000/60/60/24) + 1.0)) * 365 '
-        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'1\';';
+    var query = 'SELECT COUNT(*)'
+        'FROM ${BookDatabaseConstants.booksTableName} WHERE ${BookDatabaseConstants.columnStatus} = \'${BookStatus.finished.index}\';';
 
     var result = await db.rawQuery(query);
     if(result.first.values.first == null) {
       return 0;
     }
-    return result.first.values.first as double;
+
+    final ReadingTimeRepository readingTimeRepository = ReadingTimeRepository(database);
+    final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
+
+    final booksCount = result.first.values.first as int;
+    final booksPerDay = booksCount / totalReadingTime;
+
+    return booksPerDay * 365;
   }
 }

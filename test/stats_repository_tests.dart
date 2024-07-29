@@ -51,7 +51,7 @@ void main() {
 
   test('getPagesPerDay', () async {
     double pagesPerDay = await statsRepository.getPagesPerDay();
-    expect(pagesPerDay, 20);
+    expect(pagesPerDay, 35);
   });
 
   test('getAverageReadingTime', () async {
@@ -61,17 +61,17 @@ void main() {
 
   test('getBooksPerMonth', () async {
     double booksPerMonth = await statsRepository.getBooksPerMonth();
-    expect(booksPerMonth, closeTo(2.57, 0.01));
+    expect(booksPerMonth, closeTo(4.5, 0.01));
   });
 
   test('getBooksPerWeek', () async {
     double booksPerWeek = await statsRepository.getBooksPerWeek();
-    expect(booksPerWeek, closeTo(0.6, 0.01));
+    expect(booksPerWeek, closeTo(1.05, 0.01));
   });
 
   test('getBooksPerYear', () async {
     double booksPerYear = await statsRepository.getBooksPerYear();
-    expect(booksPerYear, closeTo(31.28, 0.01));
+    expect(booksPerYear, closeTo(54.75, 0.01));
   });
 }
 
