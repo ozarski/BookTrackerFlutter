@@ -25,6 +25,9 @@ class BookDatabase{
     db.execute(
       BookDatabaseConstants.createBookTableQuery
     );
+    db.execute(
+      BookDatabaseConstants.createReadingTimeTableQuery
+    );
   }
 
   Future<void> close() async {
