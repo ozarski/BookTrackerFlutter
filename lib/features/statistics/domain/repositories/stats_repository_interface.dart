@@ -10,4 +10,5 @@ abstract class StatsRepositoryInterface {
   Future<int> booksToBeReadThisYear([DateTime date]);
   Future<int> booksReadInYear(int year);
   Future<int> booksReadInMonth(int month, int year);
+  Future<Map<int, int>> booksReadEachMonthForYear(int year);
 }

@@ -113,6 +113,19 @@ void main() {
     
     expect(booksReadInMonth, 2);
   });
+
+  test('booksReadEachMonthForYear', () async {
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.readingTimeTableName));
+    await generateMockBooksWithFixedDates(database);
+
+    Map<int, int> booksReadEachMonthForYear = await statsRepository.booksReadEachMonthForYear(DateTime.now().year);
+
+    expect(booksReadEachMonthForYear, {1: 2, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0});
+
+  });
 }
 
 Future<List<Book>> generateMockBooks() async {

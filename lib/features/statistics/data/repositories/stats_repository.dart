@@ -174,4 +174,35 @@ class StatsRepository implements StatsRepositoryInterface {
 
     return (booksPerDay * daysLeft).round() + bookCount;
   }
+
+  @override
+  Future <Map<int, int>> booksReadEachMonthForYear(int year) async {
+    final db = await database.database;
+
+    final query = '''SELECT 
+strftime('%m', datetime(${BookDatabaseConstants.columnFinishDate} / 1000, 'unixepoch')) AS month,
+COUNT(*) AS count 
+FROM ${BookDatabaseConstants.booksTableName}
+WHERE strftime('%Y', datetime(${BookDatabaseConstants.columnFinishDate} / 1000, 'unixepoch')) = '$year' 
+AND status = '${BookStatus.finished.index}'
+GROUP BY month;''';
+
+    final result = await db.rawQuery(query);
+    
+    var resultsToMap = <int, int>{};
+
+    for (var row in result) {
+      resultsToMap[int.parse(row['month'] as String)] = row['count'] as int;
+    }
+
+    for (var i = 1; i <= 12; i++) {
+      if (!resultsToMap.containsKey(i)) {
+        resultsToMap[i] = 0;
+      }
+    }
+
+    resultsToMap = Map.fromEntries(resultsToMap.entries.toList()..sort((a, b) => a.key.compareTo(b.key)));
+
+    return resultsToMap;
+  }
 }

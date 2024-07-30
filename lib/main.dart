@@ -16,6 +16,7 @@ import 'package:book_tracker/features/search_books/data/repositories/google_book
 import 'package:book_tracker/features/search_books/domain/usecases/display_volumes.dart';
 import 'package:book_tracker/features/search_books/presentation/screens/book_search_screen.dart';
 import 'package:book_tracker/features/statistics/data/repositories/stats_repository.dart';
+import 'package:book_tracker/features/statistics/domain/usecases/get_books_for_each_month.dart';
 import 'package:book_tracker/features/statistics/domain/usecases/get_stats.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:book_tracker/theme.dart';
@@ -72,6 +73,9 @@ void main() {
         ProxyProvider<StatsRepository, GetStatsUseCase>(
           update: (_, repository, __) => GetStatsUseCase(repository),
         ),
+        ProxyProvider<StatsRepository, GetBooksForEachMonthUseCase>(
+          update: (_, repository, __) => GetBooksForEachMonthUseCase(repository),
+        ),
         ProxyProvider<GoogleBooksRepository, DisplayVolumesUseCase>(
           update: (_, repository, __) => DisplayVolumesUseCase(repository),
         ),
@@ -80,7 +84,7 @@ void main() {
               BookListModel(context.read<DisplayBookListUseCase>()),
         ),
         ChangeNotifierProvider<StatsStateModel>(
-          create: (context) => StatsStateModel(context.read<GetStatsUseCase>()),
+          create: (context) => StatsStateModel(context.read<GetStatsUseCase>(), context.read<GetBooksForEachMonthUseCase>()),
         ),
       ],
       child: const MainApp(),

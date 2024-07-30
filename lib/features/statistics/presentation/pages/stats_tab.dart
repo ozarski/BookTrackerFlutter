@@ -1,6 +1,6 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
-import 'package:book_tracker/features/statistics/presentation/widgets/stat_widget.dart';
+import 'package:book_tracker/features/statistics/presentation/widgets/books_per_month_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -71,6 +71,11 @@ class StatsTab extends StatelessWidget {
                     children: [
                       booksReadThisYear(context, statsModel),
                       bookReadThisMonth(context, statsModel),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      booksPerMonthThisYearBarChart(context, statsModel),
                     ],
                   ),
                 ],
@@ -325,6 +330,30 @@ class StatsTab extends StatelessWidget {
         const Color.fromARGB(116, 252, 230, 108),
       ).addPadding(
         const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+      ),
+    );
+  }
+
+  Widget booksPerMonthThisYearBarChart(
+      BuildContext context, StatsStateModel statsModel) {
+    return Expanded(
+      child: statContainer(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('Books read each month this year',
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+            SizedBox(
+              height: 300,
+              child:
+                  BooksPerMonthChart(booksPerMonth: statsModel.booksPerMonth),
+            ),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        Theme.of(context).colorScheme.tertiary,
+      ).addPadding(
+        const EdgeInsets.only(top: 10, bottom: 30, right: 20, left: 20),
       ),
     );
   }
