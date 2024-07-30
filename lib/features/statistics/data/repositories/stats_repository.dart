@@ -170,7 +170,7 @@ class StatsRepository implements StatsRepositoryInterface {
     }
 
     final booksPerDay = bookCount / totalReadingTime;
-    final daysLeft = 365 - int.parse(DateFormat('D').format(currentDate));
+    final daysLeft = (currentDate.year % 4 == 0 ? 366 : 365) - int.parse(DateFormat('D').format(currentDate));
 
     return (booksPerDay * daysLeft).round() + bookCount;
   }

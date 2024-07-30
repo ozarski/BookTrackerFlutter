@@ -29,39 +29,52 @@ class StatsTab extends StatelessWidget {
             statusBarIconBrightness: Brightness.dark),
         child: Consumer<StatsStateModel>(
           builder: (context, statsModel, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    totalPages(context, statsModel),
-                    totalBooks(context, statsModel),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    pagesPerBook(context, statsModel),
-                    daysPerBook(context, statsModel),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    booksPerMonth(context, statsModel),
-                    pagesPerDay(context, statsModel),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    booksPerYear(context, statsModel),
-                    booksPerWeek(context, statsModel)
-                  ],
-                )
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      totalPages(context, statsModel),
+                      totalBooks(context, statsModel),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      pagesPerBook(context, statsModel),
+                      daysPerBook(context, statsModel),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      booksPerMonth(context, statsModel),
+                      pagesPerDay(context, statsModel),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      booksPerYear(context, statsModel),
+                      booksPerWeek(context, statsModel)
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      booksToBeRead(context, statsModel),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      booksReadThisYear(context, statsModel),
+                      bookReadThisMonth(context, statsModel),
+                    ],
+                  ),
+                ],
+              ),
             );
           },
         ),
@@ -111,7 +124,7 @@ class StatsTab extends StatelessWidget {
     return statContainer(
       Column(
         children: [
-          const Text('Pages per book',
+          const Text('pages per book',
               style: TextStyle(color: Colors.white, fontSize: 20)),
           Text(statsModel.stats['pages per book'] ?? '0',
               style: const TextStyle(color: Colors.white, fontSize: 19)),
@@ -129,7 +142,7 @@ class StatsTab extends StatelessWidget {
       child: statContainer(
         Column(
           children: [
-            const Text('Days per book',
+            const Text('days per book',
                 style: TextStyle(color: Colors.white, fontSize: 20)),
             Text(statsModel.stats['days per book'] ?? '0',
                 style: const TextStyle(color: Colors.white, fontSize: 19)),
@@ -153,7 +166,7 @@ class StatsTab extends StatelessWidget {
           const SizedBox(
             width: 70,
             child: Text(
-              'Pages per day',
+              'pages per day',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -180,7 +193,7 @@ class StatsTab extends StatelessWidget {
             const SizedBox(
               width: 90,
               child: Text(
-                'Books per month',
+                'books per month',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ).addPadding(const EdgeInsets.only(right: 10)),
@@ -200,7 +213,7 @@ class StatsTab extends StatelessWidget {
     return statContainer(
       Column(
         children: [
-          const Text('Books per week',
+          const Text('books per week',
               style: TextStyle(color: Colors.white, fontSize: 20)),
           Text(statsModel.stats['books per week'] ?? '0',
               style: const TextStyle(color: Colors.white, fontSize: 19)),
@@ -223,7 +236,7 @@ class StatsTab extends StatelessWidget {
             const SizedBox(
               width: 80,
               child: Text(
-                'Books per year',
+                'books per year',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ).addPadding(const EdgeInsets.only(right: 0)),
@@ -239,6 +252,83 @@ class StatsTab extends StatelessWidget {
     );
   }
 
+  Widget booksToBeRead(BuildContext context, StatsStateModel statsModel) {
+    return Expanded(
+      child: statContainer(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(statsModel.stats['books to be read this year'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 23)),
+            const SizedBox(
+              width: 250,
+              child: Text(
+                'books will be read this year with current pace',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+                textAlign: TextAlign.right,
+              ),
+            ),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        const Color.fromARGB(116, 252, 230, 108),
+      ).addPadding(
+        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+    );
+  }
+
+  Widget booksReadThisYear(BuildContext context, StatsStateModel statsModel) {
+    return statContainer(
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const SizedBox(
+            width: 100,
+            child: Text(
+              'books read this year',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.left,
+            ),
+          ).addPadding(const EdgeInsets.only(right: 20)),
+          Text(statsModel.stats['books read this year'] ?? '0',
+              style: const TextStyle(color: Colors.white, fontSize: 23)),
+        ],
+      ).addPadding(const EdgeInsets.all(20)),
+      context,
+      Theme.of(context).colorScheme.tertiary,
+    ).addPadding(
+      const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 20),
+    );
+  }
+
+  Widget bookReadThisMonth(BuildContext context, StatsStateModel statsModel) {
+    return Expanded(
+      child: statContainer(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(statsModel.stats['books read this month'] ?? '0',
+                style: const TextStyle(color: Colors.white, fontSize: 23)),
+            const SizedBox(
+              width: 100,
+              child: Text(
+                'books read this month',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+                textAlign: TextAlign.right,
+              ),
+            ).addPadding(const EdgeInsets.only(right: 10)),
+          ],
+        ).addPadding(const EdgeInsets.all(20)),
+        context,
+        const Color.fromARGB(116, 252, 230, 108),
+      ).addPadding(
+        const EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 10),
+      ),
+    );
+  }
+
   Widget statContainer(
       Widget content, BuildContext context, Color containerColor) {
     return Container(
@@ -249,46 +339,6 @@ class StatsTab extends StatelessWidget {
         ),
       ),
       child: content,
-    );
-  }
-
-  Widget statsLeftColumn(StatsStateModel statsModel) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        StatWidget(
-                title: "total books",
-                value: statsModel.stats['total books'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-        StatWidget(
-                title: "pages per day",
-                value: statsModel.stats['pages per day'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-        StatWidget(
-                title: "books per month",
-                value: statsModel.stats['books per month'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-      ],
-    );
-  }
-
-  Widget statsRightColumn(StatsStateModel statsModel) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        StatWidget(
-                title: "pages per book",
-                value: statsModel.stats['pages per book'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-        StatWidget(
-                title: "days per book",
-                value: statsModel.stats['days per book'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-        StatWidget(
-                title: "books per week",
-                value: statsModel.stats['books per week'] ?? '0')
-            .addPadding(const EdgeInsets.only(bottom: 25)),
-      ],
     );
   }
 }
