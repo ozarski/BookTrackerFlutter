@@ -36,7 +36,7 @@ class BookDatabase{
     await _database.close();
   }
 
-  Future<bool> importedDatabaseSchemaCheck(String importedDatabaseName) async {
+  Future<bool> importDatabase(String importedDatabaseName) async {
     var path = join(await getDatabasesPath(), importedDatabaseName);
     try{
       await openDatabase(path);

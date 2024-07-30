@@ -71,6 +71,23 @@ class StartDatePickerWidget extends StatelessWidget {
         ),
         dialogBackgroundColor: Theme.of(context).colorScheme.secondary,
         scaffoldBackgroundColor: Theme.of(context).colorScheme.secondary,
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: const TextStyle(color: Colors.grey),
+          labelStyle: const TextStyle(color: Colors.white),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        )
       ),
       child: child
     );

@@ -34,17 +34,14 @@ class ModifyBookStateModel extends ChangeNotifier {
 
   void setTitle(String title) {
     _book.title = title;
-    notifyListeners();
   }
 
   void setAuthor(String author) {
     _book.author = author;
-    notifyListeners();
   }
 
   void setNumberOfPages(int pages) {
     _book.pages = pages;
-    notifyListeners();
   }
 
   void setStartDate(DateTime startDate) {

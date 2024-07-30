@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import '../widgets/book_list_item.dart';
 import 'package:provider/provider.dart';
 
@@ -129,10 +130,15 @@ class BookListTab extends StatelessWidget {
 
     String? outputDirectory = await FilePicker.platform.getDirectoryPath();
 
+    String dateTimeFormatted = DateFormat('dd-MM-yyyy-HH-mm-ss').format(DateTime.now());
+    String? outputPath = outputDirectory != null
+        ? '$outputDirectory/book_database_backup_$dateTimeFormatted'
+        : null;
+
     if (outputDirectory != null) {
       try {
         databaseFile
-            .copy('$outputDirectory/${BookDatabaseConstants.databaseName}');
+            .copy(outputPath!);
       } catch (exception) {
         kDebugMode ? print(exception) : null;
         Fluttertoast.showToast(
@@ -158,7 +164,7 @@ class BookListTab extends StatelessWidget {
     if (result != null) {
       File file = File(result.files.single.path!);
       await file.copy("${databaseFile.path}.test.db");
-      if(!await BookDatabase.instance.importedDatabaseSchemaCheck("${databaseFile.path}.test.db")){
+      if(!await BookDatabase.instance.importDatabase("${databaseFile.path}.test.db")){
         Fluttertoast.showToast(
           msg: 'This is not a valid database file',
           toastLength: Toast.LENGTH_SHORT,

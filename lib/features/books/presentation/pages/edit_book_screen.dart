@@ -23,17 +23,9 @@ class EditBookScreen extends StatelessWidget {
         builder: (context, bookModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Edit Book',
-                  style: TextStyle(fontWeight: FontWeight.w300)),
-              bottom: const PreferredSize(
-                preferredSize: Size.fromHeight(4.0),
-                child: Divider(
-                  color: Colors.black,
-                  height: 4.0,
-                  thickness: 0.5,
-                  indent: 10.0,
-                  endIndent: 10.0,
-                ),
+              title: const Text(
+                'Edit Book',
+                style: TextStyle(fontWeight: FontWeight.w300),
               ),
             ),
             body: Center(
@@ -44,43 +36,41 @@ class EditBookScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.white,
-                      decoration: textFieldDecoration('title'),
-                      onChanged: (title) {
-                        bookModel.setTitle(title);
-                      },
-                      initialValue: book.title,
-                      style: const TextStyle(color: Colors.white)
-                    ),
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('title'),
+                        onChanged: (title) {
+                          bookModel.setTitle(title);
+                        },
+                        initialValue: book.title,
+                        style: const TextStyle(color: Colors.white)),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.white,
-                      decoration: textFieldDecoration('author'),
-                      onChanged: (author) {
-                        bookModel.setAuthor(author);
-                      },
-                      initialValue: book.author,
-                      style: const TextStyle(color: Colors.white)
-                    ),
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('author'),
+                        onChanged: (author) {
+                          bookModel.setAuthor(author);
+                        },
+                        initialValue: book.author,
+                        style: const TextStyle(color: Colors.white)),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: TextFormField(
-                      cursorColor: Colors.white,
-                      decoration: textFieldDecoration('pages'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (numberOfPages) {
-                        if (numberOfPages != "") {
-                          bookModel.setNumberOfPages(int.parse(numberOfPages));
-                        }
-                      },
-                      initialValue: book.pages.toString(),
-                      style: const TextStyle(color: Colors.white)
-                    ),
+                        cursorColor: Colors.white,
+                        decoration: textFieldDecoration('pages'),
+                        keyboardType: TextInputType.number,
+                        onChanged: (numberOfPages) {
+                          if (numberOfPages != "") {
+                            bookModel
+                                .setNumberOfPages(int.parse(numberOfPages));
+                          }
+                        },
+                        initialValue: book.pages.toString(),
+                        style: const TextStyle(color: Colors.white)),
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
@@ -128,7 +118,9 @@ Widget actionButton(ModifyBookStateModel bookModel, BuildContext context) {
       },
       child: Text('Save',
           style: TextStyle(
-              fontSize: 20, color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w300)),
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.secondary,
+              fontWeight: FontWeight.w300)),
     ),
   );
 }
