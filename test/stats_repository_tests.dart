@@ -1,3 +1,4 @@
+
 import 'package:book_tracker/core/data_sources/book_database.dart';
 import 'package:book_tracker/core/data_sources/book_database_constants.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
@@ -30,9 +31,11 @@ void main() {
 
   tearDown(() async {
     //delete all books
-    await BookDatabase.instance.database.then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.readingTimeTableName));
   });
-
 
   test('getBooksCount', () async {
     int booksCount = await statsRepository.getBooksCount();
@@ -72,6 +75,43 @@ void main() {
   test('getBooksPerYear', () async {
     double booksPerYear = await statsRepository.getBooksPerYear();
     expect(booksPerYear, closeTo(54.75, 0.01));
+  });
+
+  test('booksToBeReadThisYear', () async {
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.readingTimeTableName));
+    await generateMockBooksWithFixedDates(database);
+
+    int booksToBeReadThisYear = await statsRepository.booksToBeReadThisYear(DateTime(DateTime.now().year, 5, 1));
+    
+    expect(booksToBeReadThisYear, 32);
+  });
+
+  test('booksReadInYear', () async {
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.readingTimeTableName));
+    await generateMockBooksWithFixedDates(database);
+
+    int booksReadInYear = await statsRepository.booksReadInYear(DateTime.now().year);
+    
+    expect(booksReadInYear, 3);
+  });
+
+  test('booksReadInMonth',
+  () async{
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.booksTableName));
+    await BookDatabase.instance.database
+        .then((db) => db.delete(BookDatabaseConstants.readingTimeTableName));
+    await generateMockBooksWithFixedDates(database);
+
+    int booksReadInMonth = await statsRepository.booksReadInMonth(1, DateTime.now().year);
+    
+    expect(booksReadInMonth, 2);
   });
 }
 
@@ -113,6 +153,54 @@ Future<List<Book>> generateMockBooks() async {
       status: BookStatus.finished,
       progress: 100,
     ),
+  ];
+
+  var booksRepo = BookRepository(database);
+  for (Book book in books) {
+    await booksRepo.addBook(book);
+  }
+
+  return books;
+}
+
+Future<List<Book>> generateMockBooksWithFixedDates(BookDatabase database) async {
+  List<Book> books = [
+    Book(
+      title: "Book 1",
+      author: "Author 1",
+      pages: 100,
+      startDate: DateTime(DateTime.now().year, 1, 1),
+      finishDate: DateTime(DateTime.now().year, 1, 10),
+      status: BookStatus.finished,
+      progress: 100,
+    ),
+    Book(
+      title: "Book 2",
+      author: "Author 2",
+      pages: 200,
+      startDate: DateTime(DateTime.now().year, 1, 10),
+      finishDate: DateTime(DateTime.now().year, 1, 20),
+      status: BookStatus.finished,
+      progress: 100,
+    ),
+    Book(
+      title: "Book 3",
+      author: "Author 3",
+      pages: 300,
+      startDate: DateTime(DateTime.now().year, 3, 1),
+      finishDate: null,
+      status: BookStatus.reading,
+      progress: 50,
+    ),
+    Book(
+      title: "Book 4",
+      author: "Author 4",
+      pages: 400,
+      startDate: DateTime(DateTime.now().year, 4, 1),
+      finishDate: DateTime(DateTime.now().year, 4, 5),
+      status: BookStatus.finished,
+      progress: 100,
+    )
   ];
 
   var booksRepo = BookRepository(database);

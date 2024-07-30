@@ -7,4 +7,7 @@ abstract class StatsRepositoryInterface {
   Future<double> getBooksPerMonth();
   Future<double> getBooksPerWeek();
   Future<double> getBooksPerYear();
+  Future<int> booksToBeReadThisYear([DateTime date]);
+  Future<int> booksReadInYear(int year);
+  Future<int> booksReadInMonth(int month, int year);
 }
