@@ -28,9 +28,16 @@ class FinishDateFilterWidget extends StatelessWidget {
 
   Future<DateTime?> setUpDatePicker(
       FilterStateModel filterModel, BuildContext context) async {
+        var initialDate = DateTime.now();
+        if(filterModel.startDate != null && filterModel.finishDate != null && filterModel.finishDate!.isBefore(filterModel.startDate!)){
+          initialDate = filterModel.startDate!;
+        }
+        else{
+          initialDate = filterModel.finishDate ?? filterModel.startDate ?? DateTime.now();
+        }
     return await showDatePicker(
       context: context,
-      initialDate: filterModel.finishDate ?? DateTime.now(),
+      initialDate: initialDate,
       firstDate: filterModel.startDate ?? DateTime(2000),
       lastDate: DateTime(2101),
       builder: (BuildContext context, Widget? child) {
