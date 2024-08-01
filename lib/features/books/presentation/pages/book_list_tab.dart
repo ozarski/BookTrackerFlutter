@@ -32,14 +32,20 @@ class BookListTab extends StatelessWidget {
                   ),
                   actions: [
                     IconButton(
-                      icon: const Icon(Icons.search),
+                      icon: Icon(
+                          model.searching ? Icons.search_off : Icons.search),
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const SearchDialog();
-                          },
-                        );
+                        if (model.searching) {
+                          model.reloadBooks();
+                          model.searching = false;
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const SearchDialog();
+                            },
+                          );
+                        }
                       },
                     ),
                     IconButton(

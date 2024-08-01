@@ -12,6 +12,7 @@ class BookListModel extends ChangeNotifier {
   final List<Book> _books = [];
 
   List<Book> get books => _books;
+  bool searching = false;
 
   BookListModel(this._displayBookListUseCase, this._filterBookListUseCase) {
     _loadBooks();
@@ -46,11 +47,29 @@ class BookListModel extends ChangeNotifier {
   }
 
   void filterList(FilterStateModel filterState) async {
-    await _filterBookListUseCase(FilterBookListParams.fromFilterStateModel(filterState)).then((value) {
+    await _filterBookListUseCase(
+            FilterBookListParams.fromFilterStateModel(filterState))
+        .then((value) {
       _books.clear();
       _books.addAll(value);
       notifyListeners();
     });
+  }
+
+  void searchBooks(String query) {
+    if (query.isEmpty) {
+      _loadBooks();
+      return;
+    }
+    var filteredBooks = _books
+        .where((element) =>
+            element.title.toLowerCase().contains(query.toLowerCase()) ||
+            element.author.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    _books.clear();
+    _books.addAll(filteredBooks);
+    searching = true;
+    notifyListeners();
   }
 
   void mockBooks() {
@@ -96,18 +115,21 @@ class BookListModel extends ChangeNotifier {
           String bookTitle = bookTitles[Random().nextInt(bookTitles.length)];
           String author = authors[Random().nextInt(authors.length)];
           int pages = Random().nextInt(500) + 100;
-          DateTime startDate = DateTime.now().subtract(Duration(days: Random().nextInt(365)));
-          DateTime finishDate = startDate.add(Duration(days: Random().nextInt(50)));
-          int progress = randomBookStatus == BookStatus.reading ? Random().nextInt(pages) : 0;
+          DateTime startDate =
+              DateTime.now().subtract(Duration(days: Random().nextInt(365)));
+          DateTime finishDate =
+              startDate.add(Duration(days: Random().nextInt(50)));
+          int progress = randomBookStatus == BookStatus.reading
+              ? Random().nextInt(pages)
+              : 0;
           return Book(
-            title: bookTitle,
-            author: author,
-            pages: pages,
-            status: randomBookStatus,
-            progress: progress,
-            startDate: startDate,
-            finishDate: finishDate
-          );
+              title: bookTitle,
+              author: author,
+              pages: pages,
+              status: randomBookStatus,
+              progress: progress,
+              startDate: startDate,
+              finishDate: finishDate);
         },
       ),
     );
