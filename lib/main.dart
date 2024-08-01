@@ -4,6 +4,7 @@ import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_list.dart';
+import 'package:book_tracker/features/books/domain/usecases/filter_book_list.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
@@ -79,9 +80,12 @@ void main() {
         ProxyProvider<GoogleBooksRepository, DisplayVolumesUseCase>(
           update: (_, repository, __) => DisplayVolumesUseCase(repository),
         ),
+        ProxyProvider<BookRepository, FilterBookListUseCase>(
+          update: (_, repository, __) => FilterBookListUseCase(repository),
+        ),
         ChangeNotifierProvider<BookListModel>(
           create: (context) =>
-              BookListModel(context.read<DisplayBookListUseCase>()),
+              BookListModel(context.read<DisplayBookListUseCase>(), context.read<FilterBookListUseCase>()),
         ),
         ChangeNotifierProvider<StatsStateModel>(
           create: (context) => StatsStateModel(context.read<GetStatsUseCase>(), context.read<GetBooksForEachMonthUseCase>()),

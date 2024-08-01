@@ -2,15 +2,18 @@ import 'dart:math';
 
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_list.dart';
+import 'package:book_tracker/features/books/domain/usecases/filter_book_list.dart';
+import 'package:book_tracker/features/books/presentation/state/filter_state_model.dart';
 import 'package:flutter/material.dart';
 
 class BookListModel extends ChangeNotifier {
   final DisplayBookListUseCase _displayBookListUseCase;
+  final FilterBookListUseCase _filterBookListUseCase;
   final List<Book> _books = [];
 
   List<Book> get books => _books;
 
-  BookListModel(this._displayBookListUseCase){
+  BookListModel(this._displayBookListUseCase, this._filterBookListUseCase) {
     _loadBooks();
   }
 
@@ -32,11 +35,18 @@ class BookListModel extends ChangeNotifier {
 
   void reloadBooks() {
     _loadBooks();
-    notifyListeners();
   }
 
   void _loadBooks() async {
     await _displayBookListUseCase().then((value) {
+      _books.clear();
+      _books.addAll(value);
+      notifyListeners();
+    });
+  }
+
+  void filterList(FilterStateModel filterState) async {
+    await _filterBookListUseCase(FilterBookListParams.fromFilterStateModel(filterState)).then((value) {
       _books.clear();
       _books.addAll(value);
       notifyListeners();

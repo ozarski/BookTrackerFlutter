@@ -6,6 +6,7 @@ import 'package:book_tracker/features/books/data/repositories/reading_time_repos
 import 'package:book_tracker/features/books/domain/repositories/book_repository_interface.dart';
 
 import 'package:book_tracker/features/books/domain/entities/book.dart';
+import 'package:book_tracker/features/books/presentation/state/filter_state_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BookRepository implements BookRepositoryInterface {
@@ -119,5 +120,33 @@ class BookRepository implements BookRepositoryInterface {
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<List<Book>> getBooksFiltered(FilterBookListParams filter) async {
+    final status = filter.status;
+    final startDate = filter.startDate;
+    final finishDate = filter.finishDate;
+
+    final db = await bookDB.database;
+
+    if(startDate == null || finishDate == null) {
+      final List<Map<String, Object?>> bookMaps = await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ?',
+        whereArgs: [status.index],
+      );
+
+      return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
+    }
+    else{
+      final List<Map<String, Object?>> bookMaps = await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnStartDate} >= ? AND ${BookDatabaseConstants.columnFinishDate} <= ?',
+        whereArgs: [status.index, startDate, finishDate],
+      );
+
+      return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
+    }
   }
 }
