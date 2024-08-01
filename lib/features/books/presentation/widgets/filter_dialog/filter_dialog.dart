@@ -61,7 +61,8 @@ class FilterDialog extends StatelessWidget {
                                 StartDateFilterWidget(),
                                 FinishDateFilterWidget(),
                               ],
-                            ).addPadding(const EdgeInsets.only(top: 10, bottom: 20)),
+                            ).addPadding(
+                                const EdgeInsets.only(top: 10, bottom: 20)),
                           );
                         },
                       ),
@@ -96,7 +97,7 @@ class FilterDialog extends StatelessWidget {
                         onPressed: () async {
                           final bookListState = context.read<BookListModel>();
                           bookListState.reloadBooks();
-                          Navigator.pop(context);
+                          filterStateModel.reset();
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 2,
@@ -115,7 +116,7 @@ class FilterDialog extends StatelessWidget {
                         ),
                       )
                     ],
-                  )
+                  ).addPadding(const EdgeInsets.symmetric(vertical: 10))
                 ],
               ).addPadding(
                 const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

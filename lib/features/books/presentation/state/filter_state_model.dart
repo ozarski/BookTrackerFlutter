@@ -12,9 +12,9 @@ class FilterStateModel extends ChangeNotifier {
   String getFormattedStartDate() {
     var startDateString = "";
     if(status == BookStatus.reading) {
-      startDateString =  startDate!=null ? DateFormat('dd/MM/yyyy').format(startDate!) : 'started before date';
+      startDateString =  startDate!=null ? DateFormat('dd/MM/yyyy').format(startDate!) : 'started after date';
     } else if(status == BookStatus.finished) {
-      startDateString =  startDate!=null ? DateFormat('dd/MM/yyyy').format(startDate!) : 'finished before date';
+      startDateString =  startDate!=null ? DateFormat('dd/MM/yyyy').format(startDate!) : 'finished after date';
     }
     else{
       startDateString =  'start date';
@@ -25,9 +25,9 @@ class FilterStateModel extends ChangeNotifier {
   String getFormattedFinishDate() {
     var finishDateString = "";
     if(status == BookStatus.reading) {
-      finishDateString =  finishDate!=null ? DateFormat('dd/MM/yyyy').format(finishDate!) : 'started after date';
+      finishDateString =  finishDate!=null ? DateFormat('dd/MM/yyyy').format(finishDate!) : 'started before date';
     } else if(status == BookStatus.finished) {
-      finishDateString =  finishDate!=null ? DateFormat('dd/MM/yyyy').format(finishDate!) : 'finished after date';
+      finishDateString =  finishDate!=null ? DateFormat('dd/MM/yyyy').format(finishDate!) : 'finished before date';
     }
     else{
       finishDateString =  'finish date';
@@ -47,6 +47,13 @@ class FilterStateModel extends ChangeNotifier {
 
   void setStatus(BookStatus status) {
     this.status = status;
+    notifyListeners();
+  }
+
+  void reset() {
+    status = BookStatus.reading;
+    startDate = null;
+    finishDate = null;
     notifyListeners();
   }
 }
