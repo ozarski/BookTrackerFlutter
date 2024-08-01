@@ -262,6 +262,7 @@ class StatsTab extends StatelessWidget {
       child: statContainer(
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(statsModel.stats['books to be read this year'] ?? '0',
                 style: const TextStyle(color: Colors.white, fontSize: 23)),

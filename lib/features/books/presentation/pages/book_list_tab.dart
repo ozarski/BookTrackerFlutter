@@ -1,6 +1,7 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/filter_dialog.dart';
+import 'package:book_tracker/features/books/presentation/widgets/search_dialog.dart';
 import 'package:book_tracker/features/books/presentation/widgets/settings_dialog.dart';
 import 'package:flutter/material.dart';
 import '../widgets/book_list_item.dart';
@@ -23,13 +24,24 @@ class BookListTab extends StatelessWidget {
                   title: const Text('Your books',
                       style: TextStyle(fontWeight: FontWeight.w300)),
                   scrolledUnderElevation: 0.0,
-                  backgroundColor: const Color(0xFFFCE76C),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                     ),
                   ),
                   actions: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const SearchDialog();
+                          },
+                        );
+                      },
+                    ),
                     IconButton(
                       icon: const Icon(Icons.filter_list_alt),
                       onPressed: () {
@@ -45,10 +57,11 @@ class BookListTab extends StatelessWidget {
                       icon: const Icon(Icons.settings),
                       onPressed: () async {
                         showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const SettingsDialog();
-                            });
+                          context: context,
+                          builder: (context) {
+                            return const SettingsDialog();
+                          },
+                        );
                       },
                     ),
                   ],
