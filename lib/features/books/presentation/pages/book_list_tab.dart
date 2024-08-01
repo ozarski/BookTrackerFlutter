@@ -1,6 +1,6 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
-import 'package:book_tracker/features/books/presentation/widgets/filter_dialog.dart';
+import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/filter_dialog.dart';
 import 'package:book_tracker/features/books/presentation/widgets/settings_dialog.dart';
 import 'package:flutter/material.dart';
 import '../widgets/book_list_item.dart';

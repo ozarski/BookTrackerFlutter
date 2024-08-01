@@ -44,7 +44,7 @@ class _StatusFilteringRadioButtonsState
       highlightColor: Colors.transparent,
       onTap: () {
         setState(() => status = targetStatus);
-        filterStateModel.status = targetStatus;
+        filterStateModel.setStatus(targetStatus);
       },
       child: Theme(
         data: ThemeData.dark(),
@@ -55,7 +55,7 @@ class _StatusFilteringRadioButtonsState
               groupValue: status,
               onChanged: (value) {
                 setState(() => status = value ?? BookStatus.reading);
-                filterStateModel.status = targetStatus;
+                filterStateModel.setStatus(targetStatus);
               },
               activeColor: Colors.white,
             ),

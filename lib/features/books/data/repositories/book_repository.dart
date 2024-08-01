@@ -124,26 +124,56 @@ class BookRepository implements BookRepositoryInterface {
 
   @override
   Future<List<Book>> getBooksFiltered(FilterBookListParams filter) async {
-    final status = filter.status;
-    final startDate = filter.startDate;
-    final finishDate = filter.finishDate;
 
     final db = await bookDB.database;
 
-    if(startDate == null || finishDate == null) {
+    if(filter.startDate != null && filter.finishDate == null){
+      final List<Map<String, Object?>> bookMaps = filter.status == BookStatus.finished ? await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnFinishDate} >= ?',
+        whereArgs: [filter.status.index, filter.startDate!.millisecondsSinceEpoch],
+      ) : 
+      await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnStartDate} >= ?',
+        whereArgs: [filter.status.index, filter.startDate!.millisecondsSinceEpoch],
+      );
+
+      return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
+    }
+    else if(filter.finishDate != null && filter.startDate == null){
+      final List<Map<String, Object?>> bookMaps = filter.status == BookStatus.finished ? await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnFinishDate} <= ?',
+        whereArgs: [filter.status.index, filter.finishDate!.millisecondsSinceEpoch],
+      ) : 
+      await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnStartDate} <= ?',
+        whereArgs: [filter.status.index, filter.finishDate!.millisecondsSinceEpoch],
+      );
+
+      return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
+    }
+    else if(filter.startDate == null || filter.finishDate == null) {
       final List<Map<String, Object?>> bookMaps = await db.query(
         BookDatabaseConstants.booksTableName,
         where: '${BookDatabaseConstants.columnStatus} = ?',
-        whereArgs: [status.index],
+        whereArgs: [filter.status.index],
       );
 
       return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];
     }
     else{
-      final List<Map<String, Object?>> bookMaps = await db.query(
+      final List<Map<String, Object?>> bookMaps = filter.status == BookStatus.finished ? await db.query(
         BookDatabaseConstants.booksTableName,
-        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnStartDate} >= ? AND ${BookDatabaseConstants.columnFinishDate} <= ?',
-        whereArgs: [status.index, startDate, finishDate],
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnFinishDate} >= ? AND ${BookDatabaseConstants.columnFinishDate} <= ?',
+        whereArgs: [filter.status.index, filter.startDate!.millisecondsSinceEpoch, filter.finishDate!.millisecondsSinceEpoch],
+      ) : 
+      await db.query(
+        BookDatabaseConstants.booksTableName,
+        where: '${BookDatabaseConstants.columnStatus} = ? AND ${BookDatabaseConstants.columnStartDate} >= ? AND ${BookDatabaseConstants.columnStartDate} <= ?',
+        whereArgs: [filter.status.index, filter.startDate!.millisecondsSinceEpoch, filter.finishDate!.millisecondsSinceEpoch],
       );
 
       return [for (final bookMap in bookMaps) BookModel.fromMap(bookMap)];

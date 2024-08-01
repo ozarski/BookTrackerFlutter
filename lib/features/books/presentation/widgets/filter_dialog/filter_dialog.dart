@@ -1,7 +1,9 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/filter_state_model.dart';
-import 'package:book_tracker/features/books/presentation/widgets/status_filtering_radio_buttons.dart';
+import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/finish_date_filter_widget.dart';
+import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/start_date_filter_widget.dart';
+import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/status_filtering_radio_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,9 +12,8 @@ class FilterDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listModel = context.read<BookListModel>();
     return ChangeNotifierProvider<FilterStateModel>(
-      create: (context) => FilterStateModel(listModel),
+      create: (context) => FilterStateModel(),
       child: Consumer<FilterStateModel>(
         builder: (context, filterStateModel, child) {
           return SimpleDialog(
@@ -24,14 +25,48 @@ class FilterDialog extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Filter',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const Text(
+                    'by status',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w300,
+                      fontSize: 15,
                     ),
-                  ),
+                  ).addPadding(const EdgeInsets.only(top: 10)),
                   const StatusFilteringRadioButtons(),
+                  const Text(
+                    'by date',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 15,
+                    ),
+                  ).addPadding(const EdgeInsets.only(top: 10)),
+                  Row(
+                    children: [
+                      Consumer<FilterStateModel>(
+                        builder: (context, filterModel, child) {
+                          return Expanded(
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                StartDateFilterWidget(),
+                                FinishDateFilterWidget(),
+                              ],
+                            ).addPadding(const EdgeInsets.only(top: 10, bottom: 20)),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -58,7 +93,7 @@ class FilterDialog extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           final bookListState = context.read<BookListModel>();
                           bookListState.reloadBooks();
                           Navigator.pop(context);
