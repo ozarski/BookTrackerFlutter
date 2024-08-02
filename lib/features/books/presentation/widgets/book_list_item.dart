@@ -60,12 +60,22 @@ class BookListItem extends StatelessWidget {
                       ),
                       child: BookCoverImage(
                         url: _book.thumbnail,
-                        noConnectionIcon: const Icon(Icons.book, size: 35),
+                        noConnectionIcon: Container(
+                          width: 100,
+                          height: 150,
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.book, size: 100),
+                        ).addPadding(const EdgeInsets.only(left: 10, top: 10)),
                       ),
                     ),
                   ).addPadding(const EdgeInsets.only(left: 10, top: 10));
                 } else {
-                  return const Icon(Icons.book, size: 35);
+                  return Container(
+                    width: 100,
+                    height: 150,
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.book, size: 100),
+                  ).addPadding(const EdgeInsets.only(left: 10, top: 10));
                 }
               },
             ),
@@ -124,7 +134,7 @@ class BookListItem extends StatelessWidget {
               return Container();
             }
           },
-        ).addPadding(const EdgeInsets.only(top: 5 , bottom: 5)),
+        ).addPadding(const EdgeInsets.only(top: 5, bottom: 5)),
       ],
     );
   }

@@ -161,9 +161,12 @@ class StatsRepository implements StatsRepositoryInterface {
   Future<int> booksToBeReadThisYear([DateTime? date]) async {
     //optional parameter used only for testing
     final currentDate = date ?? DateTime.now();
-    final bookCount = await getBooksCount();
+    final bookCount = await booksReadInYear(currentDate.year);
     final readingTimeRepository = ReadingTimeRepository(database);
-    final totalReadingTime = await readingTimeRepository.getTotalReadingTime();
+    final totalReadingTime = await readingTimeRepository.getReadingTimeForTimePeriod(
+      DateTime(currentDate.year, 1, 1),
+      DateTime(currentDate.year, 12, 31),
+    );
 
     if (totalReadingTime == 0) {
       return 0;

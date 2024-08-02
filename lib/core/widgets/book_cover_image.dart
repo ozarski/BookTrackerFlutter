@@ -52,7 +52,7 @@ class _BookCoverImageState extends State<BookCoverImage> {
               fit: BoxFit.cover,
             );
           } else {
-            return Center(child: widget.noConnectionIcon);
+            return widget.noConnectionIcon;
           }
         }
       },
