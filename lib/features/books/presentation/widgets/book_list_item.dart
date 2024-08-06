@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/services/router.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/core/widgets/book_cover_image.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
@@ -27,7 +28,7 @@ class BookListItem extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            '/book_details',
+            RouteGenerator.bookDetails,
             arguments: {
               'bookID': _book.id,
             },

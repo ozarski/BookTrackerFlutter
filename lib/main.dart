@@ -1,4 +1,5 @@
 import 'package:book_tracker/core/data_sources/book_database.dart';
+import 'package:book_tracker/core/services/router.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
@@ -8,14 +9,11 @@ import 'package:book_tracker/features/books/domain/usecases/filter_book_list.dar
 import 'package:book_tracker/features/books/domain/usecases/update_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
-import 'package:book_tracker/features/books/presentation/pages/book_details_screen.dart';
 import 'package:book_tracker/core/pages/home_screen.dart';
-import 'package:book_tracker/features/books/presentation/pages/edit_book_screen.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/search_books/data/data_sources/google_books_api_service.dart';
 import 'package:book_tracker/features/search_books/data/repositories/google_books_repository.dart';
 import 'package:book_tracker/features/search_books/domain/usecases/display_volumes.dart';
-import 'package:book_tracker/features/search_books/presentation/screens/book_search_screen.dart';
 import 'package:book_tracker/features/statistics/data/repositories/stats_repository.dart';
 import 'package:book_tracker/features/statistics/domain/usecases/get_books_for_each_month.dart';
 import 'package:book_tracker/features/statistics/domain/usecases/get_stats.dart';
@@ -25,7 +23,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'features/books/presentation/pages/add_book_screen.dart';
 
 void main() {
   runApp(
@@ -102,12 +99,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: <String, WidgetBuilder>{
-        '/add_book': (BuildContext context) => const AddBookScreen(),
-        '/book_details': (BuildContext context) => const BookDetailsScreen(),
-        '/edit_book': (BuildContext context) => const EditBookScreen(),
-        '/search': (BuildContext context) => const BookSearchScreen(),
-      },
+      initialRoute: RouteGenerator.home,
+      onGenerateRoute: RouteGenerator.generateRoute,
       theme: appTheme,
       home: const DefaultTabController(
         length: 2,

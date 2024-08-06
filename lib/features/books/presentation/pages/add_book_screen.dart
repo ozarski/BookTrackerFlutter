@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/services/router.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
@@ -43,9 +44,10 @@ class AddBookScreen extends StatelessWidget {
                         connection.contains(ConnectivityResult.ethernet) ||
                         connection.contains(ConnectivityResult.bluetooth)) {
                       if (context.mounted) {
-                        Navigator.pushNamed(context, '/search', arguments: {
-                          'bookModel': newBookModel,
-                        });
+                        Navigator.pushNamed(context, RouteGenerator.search,
+                            arguments: {
+                              'bookModel': newBookModel,
+                            });
                       }
                     } else {
                       Fluttertoast.showToast(

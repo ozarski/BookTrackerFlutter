@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/services/router.dart';
 import 'package:book_tracker/core/utils/global_functions.dart';
 import 'package:book_tracker/core/widgets/book_cover_image.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
@@ -51,7 +52,7 @@ class BookDetailsScreen extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(
-                      '/edit_book',
+                      RouteGenerator.editBook,
                       arguments: {'book': bookModel.book},
                     );
                   },
