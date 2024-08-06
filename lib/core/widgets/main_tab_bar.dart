@@ -6,6 +6,25 @@ class MainTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return tabContainer(context,
+      TabBar(
+        dividerColor: Theme.of(context).colorScheme.primary,
+        tabs: [
+          const Tab(
+            icon: Icon(Icons.book_outlined),
+          ).addPadding(const EdgeInsets.symmetric(horizontal: 10)),
+          const Tab(
+            icon: Icon(Icons.bar_chart_outlined),
+          ).addPadding(const EdgeInsets.symmetric(horizontal: 10)),
+        ],
+        indicatorColor: Colors.black,
+        labelColor: Colors.black,
+        unselectedLabelColor: const Color.fromARGB(255, 131, 135, 102),
+      ),
+    );
+  }
+
+  Widget tabContainer(BuildContext context, Widget child){
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -13,21 +32,7 @@ class MainTabBar extends StatelessWidget {
           top: Radius.circular(20),
         ),
       ),
-      child: TabBar(
-        dividerColor: Theme.of(context).colorScheme.primary,
-        tabs: [
-          const Tab(
-              icon: Icon(
-            Icons.book_outlined,
-            weight: 6,
-          )).addPadding(const EdgeInsets.symmetric(horizontal: 10)),
-          const Tab(icon: Icon(Icons.bar_chart_outlined))
-              .addPadding(const EdgeInsets.symmetric(horizontal: 10)),
-        ],
-        indicatorColor: Colors.black,
-        labelColor: Colors.black,
-        unselectedLabelColor: const Color.fromARGB(255, 131, 135, 102),
-      ),
+      child: child,
     );
   }
 }

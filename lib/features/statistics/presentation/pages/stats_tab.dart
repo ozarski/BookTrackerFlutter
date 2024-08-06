@@ -11,18 +11,7 @@ class StatsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Statistics",
-          style: TextStyle(fontWeight: FontWeight.w300),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(20),
-          ),
-        ),
-      ),
+      appBar: appBar(context),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light.copyWith(
             statusBarColor: Theme.of(context).colorScheme.primary,
@@ -30,60 +19,79 @@ class StatsTab extends StatelessWidget {
         child: Consumer<StatsStateModel>(
           builder: (context, statsModel, child) {
             return SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      totalPages(context, statsModel),
-                      totalBooks(context, statsModel),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      pagesPerBook(context, statsModel),
-                      daysPerBook(context, statsModel),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      booksPerMonth(context, statsModel),
-                      pagesPerDay(context, statsModel),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      booksPerYear(context, statsModel),
-                      booksPerWeek(context, statsModel)
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      booksToBeRead(context, statsModel),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      booksReadThisYear(context, statsModel),
-                      bookReadThisMonth(context, statsModel),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      booksPerMonthThisYearBarChart(context, statsModel),
-                    ],
-                  ),
-                ],
-              ),
+              child: statsContent(context, statsModel),
             );
           },
         ),
       ),
+    );
+  }
+
+  PreferredSizeWidget appBar(BuildContext context) {
+    return AppBar(
+      title: const Text(
+        "Statistics",
+        style: TextStyle(fontWeight: FontWeight.w300),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(20),
+        ),
+      ),
+    );
+  }
+
+  Widget statsContent(BuildContext context, StatsStateModel statsModel) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            totalPages(context, statsModel),
+            totalBooks(context, statsModel),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            pagesPerBook(context, statsModel),
+            daysPerBook(context, statsModel),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            booksPerMonth(context, statsModel),
+            pagesPerDay(context, statsModel),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            booksPerYear(context, statsModel),
+            booksPerWeek(context, statsModel)
+          ],
+        ),
+        Row(
+          children: [
+            booksToBeRead(context, statsModel),
+          ],
+        ),
+        Row(
+          children: [
+            booksReadThisYear(context, statsModel),
+            bookReadThisMonth(context, statsModel),
+          ],
+        ),
+        Row(
+          children: [
+            booksPerMonthThisYearBarChart(context, statsModel),
+          ],
+        ),
+      ],
     );
   }
 

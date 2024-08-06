@@ -20,58 +20,7 @@ class BookListTab extends StatelessWidget {
             builder: (context, model, child) {
               return Scaffold(
                 backgroundColor: const Color(0xFF1F1E22),
-                appBar: AppBar(
-                  title: const Text('Your books',
-                      style: TextStyle(fontWeight: FontWeight.w300)),
-                  scrolledUnderElevation: 0.0,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                    ),
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(
-                          model.searching ? Icons.search_off : Icons.search),
-                      onPressed: () {
-                        if (model.searching) {
-                          model.reloadBooks();
-                          model.searching = false;
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const SearchDialog();
-                            },
-                          );
-                        }
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.filter_list_alt),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const FilterDialog();
-                          },
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () async {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const SettingsDialog();
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                appBar: appBar(context, model),
                 body: ListView.builder(
                   itemCount: model.books.length,
                   itemBuilder: (context, index) {
@@ -83,6 +32,72 @@ class BookListTab extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  PreferredSizeWidget appBar(BuildContext context, BookListModel model) {
+    return AppBar(
+      title: const Text('Your books',
+          style: TextStyle(fontWeight: FontWeight.w300)),
+      scrolledUnderElevation: 0.0,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+        ),
+      ),
+      actions: [
+        searchIconButton(context, model),
+        filterIconButton(context),
+        settingsIconButton(context),
+      ],
+    );
+  }
+
+  Widget searchIconButton(BuildContext context, BookListModel model) {
+    return IconButton(
+      icon: Icon(model.searching ? Icons.search_off : Icons.search),
+      onPressed: () {
+        if (model.searching) {
+          model.reloadBooks();
+          model.searching = false;
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const SearchDialog();
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget filterIconButton(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.filter_list_alt),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const FilterDialog();
+          },
+        );
+      },
+    );
+  }
+
+  Widget settingsIconButton(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.settings),
+      onPressed: () async {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const SettingsDialog();
+          },
+        );
+      },
     );
   }
 }

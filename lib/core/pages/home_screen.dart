@@ -12,24 +12,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          splashColor: Theme.of(context).colorScheme.primary,
-          onPressed: () {
-            Navigator.pushNamed(
-              context,
-              RouteGenerator.addBook,
-            );
-          },
-          child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
-        ),
-      ).addPadding(const EdgeInsets.only(bottom: 50, right: 20)),
+      floatingActionButton: floatingActionButton(context),
       body: Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light.copyWith(
-              statusBarColor: Theme.of(context).colorScheme.primary,
-              statusBarIconBrightness: Brightness.dark),
+            statusBarColor: Theme.of(context).colorScheme.primary,
+            statusBarIconBrightness: Brightness.dark,
+          ),
           child: Container(
             color: Theme.of(context).colorScheme.secondary,
             child: const Column(
@@ -45,5 +34,19 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget floatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      splashColor: Theme.of(context).colorScheme.primary,
+      onPressed: () {
+        Navigator.pushNamed(
+          context,
+          RouteGenerator.addBook,
+        );
+      },
+      child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
+    ).addPadding(const EdgeInsets.only(bottom: 50, right: 20));
   }
 }
