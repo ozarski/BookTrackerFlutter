@@ -68,73 +68,81 @@ class BookSearchScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: volumeListModel.volumes.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          color: Theme.of(context).colorScheme.tertiary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                    child: volumeListModel.volumes.isEmpty
+                        ? Center(
+                            child: Text(
+                              volumeListModel.errorMessage ?? 'Enter a search query above',
+                              style: const TextStyle(color: Colors.white70, fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: volumeListModel.volumes.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.only(right: 5, left: 5),
+                                  visualDensity: const VisualDensity(vertical: 2),
+                                  title: Text(
+                                    volumeListModel.volumes[index].title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    volumeListModel.volumes[index].authors,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.add, size: 35),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      var routeArgs = ModalRoute.of(context)!
+                                          .settings
+                                          .arguments as Map<String, dynamic>;
+                                      var newBookModel = routeArgs['bookModel']
+                                          as ModifyBookStateModel;
+                                      newBookModel.fromGoogleBooksVolume(
+                                          volumeListModel.volumes[index]);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  leading: Builder(
+                                    builder: (context) {
+                                      if (volumeListModel
+                                          .volumes[index].thumbnail.isNotEmpty) {
+                                        return ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            volumeListModel.volumes[index].thumbnail,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      } else {
+                                        return const Icon(
+                                          Icons.book,
+                                          size: 45,
+                                        );
+                                      }
+                                    },
+                                  ).addPadding(const EdgeInsets.only(left: 5)),
+                                ),
+                              ).addPadding(
+                                  const EdgeInsets.symmetric(horizontal: 10));
+                            },
                           ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.only(right: 5, left: 5),
-                            visualDensity: const VisualDensity(vertical: 2),
-                            title: Text(
-                              volumeListModel.volumes[index].title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            subtitle: Text(
-                              volumeListModel.volumes[index].authors,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.add, size: 35),
-                              color: Colors.white,
-                              onPressed: () {
-                                var routeArgs = ModalRoute.of(context)!
-                                    .settings
-                                    .arguments as Map<String, dynamic>;
-                                var newBookModel = routeArgs['bookModel']
-                                    as ModifyBookStateModel;
-                                newBookModel.fromGoogleBooksVolume(
-                                    volumeListModel.volumes[index]);
-                                Navigator.pop(context);
-                              },
-                            ),
-                            leading: Builder(
-                              builder: (context) {
-                                if (volumeListModel
-                                    .volumes[index].thumbnail.isNotEmpty) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      volumeListModel.volumes[index].thumbnail,
-                                      fit: BoxFit.cover,
-                                    )
-                                  );
-                                } else {
-                                  return const Icon(
-                                    Icons.book,
-                                    size: 45,
-                                  );
-                                }
-                              },
-                            ).addPadding(const EdgeInsets.only(left: 5)),
-                          ),
-                        ).addPadding(
-                            const EdgeInsets.symmetric(horizontal: 10));
-                      },
-                    ),
                   ),
                 ],
               );

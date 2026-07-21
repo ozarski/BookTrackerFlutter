@@ -11,7 +11,9 @@ class GoogleBooksRepository implements GoogleBooksRepositoryInterface {
   Future<List<VolumeInfo>> searchBooks(String query) async {
     var bookJson = await apiService.searchBooks(query);
 
-    List<VolumeInfo> volumes = bookJson['items']
+    if (bookJson['items'] == null) return [];
+
+    List<VolumeInfo> volumes = (bookJson['items'] as List)
         .map<VolumeInfo>((volume) => VolumeInfo.fromJson(volume['volumeInfo']))
         .toList();
 

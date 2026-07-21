@@ -1,3 +1,4 @@
+import 'package:book_tracker/core/constants/api_keys.dart';
 import 'package:book_tracker/core/data_sources/book_database.dart';
 import 'package:book_tracker/features/books/data/repositories/book_repository.dart';
 import 'package:book_tracker/features/books/domain/usecases/add_book.dart';
@@ -39,7 +40,7 @@ void main() {
           create: (_) => Dio(),
         ),
         ProxyProvider<Dio, GoogleBooksApiService>(
-          update: (_, dio, __) => GoogleBooksApiService(dio),
+          update: (_, dio, __) => GoogleBooksApiService(dio, apiKey: ApiKeys.googleBooks),
         ),
         ProxyProvider<GoogleBooksApiService, GoogleBooksRepository>(
           update: (_, apiService, __) => GoogleBooksRepository(apiService),

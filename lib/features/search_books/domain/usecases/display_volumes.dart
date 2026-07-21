@@ -9,12 +9,7 @@ class DisplayVolumesUseCase implements UseCase<List<GoogleBooksVolume>, String>{
 
   @override
   Future<List<GoogleBooksVolume>> call(String query) async {
-    try{
-      var volumesInfo = await repository.searchBooks(query);
-      return volumesInfo.map((volumeInfo) => volumeInfo.toEntity()).toList();
-    }
-    catch(e){
-      return [];
-    }
+    var volumesInfo = await repository.searchBooks(query);
+    return volumesInfo.map((volumeInfo) => volumeInfo.toEntity()).toList();
   }
 }
