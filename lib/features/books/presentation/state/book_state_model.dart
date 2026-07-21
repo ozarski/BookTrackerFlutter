@@ -137,7 +137,10 @@ class BookStateModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      var result = await googleBooksApiService.searchBooks(book!.title);
+      var searchQuery = book!.author.isNotEmpty
+          ? '${book!.title} ${book!.author}'
+          : book!.title;
+      var result = await googleBooksApiService.searchBooks(searchQuery);
       var items = result['items'] as List?;
       if (items == null || items.isEmpty) {
         _coverError = 'No cover found.';

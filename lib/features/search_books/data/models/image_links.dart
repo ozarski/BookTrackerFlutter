@@ -4,9 +4,13 @@ class ImageLinks {
   ImageLinks({required this.thumbnail});
 
   factory ImageLinks.fromJson(Map<String, dynamic> json) {
-    return ImageLinks(
-      thumbnail: json['thumbnail'] ?? '',
-    );
+    var thumbnail = json['thumbnail'] as String? ?? '';
+    if (thumbnail.isNotEmpty) {
+      thumbnail = thumbnail
+          .replaceAll('zoom=1', 'zoom=0')
+          .replaceAll('zoom=5', 'zoom=0');
+    }
+    return ImageLinks(thumbnail: thumbnail);
   }
 
   Map<String, dynamic> toJson() {
