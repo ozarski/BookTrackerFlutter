@@ -37,7 +37,6 @@ class BookListTab extends StatelessWidget {
                       onPressed: () {
                         if (model.searching) {
                           model.reloadBooks();
-                          model.searching = false;
                         } else {
                           showDialog(
                             context: context,
@@ -72,12 +71,21 @@ class BookListTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                body: ListView.builder(
-                  itemCount: model.books.length,
-                  itemBuilder: (context, index) {
-                    return BookListItem(book: model.books[index]);
-                  },
-                ).addPadding(const EdgeInsets.only(top: 10)),
+                body: model.isEmptyMessage != null
+                    ? Center(
+                        child: Text(
+                          model.isEmptyMessage!,
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: model.books.length,
+                        itemBuilder: (context, index) {
+                          return BookListItem(book: model.books[index]);
+                        },
+                      ).addPadding(const EdgeInsets.only(top: 10)),
               );
             },
           ),

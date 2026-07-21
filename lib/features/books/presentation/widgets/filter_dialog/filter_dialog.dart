@@ -1,4 +1,5 @@
 import 'package:book_tracker/core/utils/padding_extension.dart';
+import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/filter_state_model.dart';
 import 'package:book_tracker/features/books/presentation/widgets/filter_dialog/finish_date_filter_widget.dart';
@@ -42,31 +43,35 @@ class FilterDialog extends StatelessWidget {
                     ),
                   ).addPadding(const EdgeInsets.only(top: 10)),
                   const StatusFilteringRadioButtons(),
-                  const Text(
-                    'by date',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 15,
+                  AnimatedCrossFade(
+                    firstChild: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'by date',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 15,
+                          ),
+                        ).addPadding(const EdgeInsets.only(top: 10)),
+                        const Column(
+                          children: [
+                            StartDateFilterWidget(),
+                            SizedBox(height: 10),
+                            FinishDateFilterWidget(),
+                          ],
+                        ).addPadding(const EdgeInsets.only(
+                            top: 10, bottom: 20, left: 10, right: 10)),
+                      ],
                     ),
-                  ).addPadding(const EdgeInsets.only(top: 10)),
-                  Row(
-                    children: [
-                      Consumer<FilterStateModel>(
-                        builder: (context, filterModel, child) {
-                          return Expanded(
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                StartDateFilterWidget(),
-                                FinishDateFilterWidget(),
-                              ],
-                            ).addPadding(
-                                const EdgeInsets.only(top: 10, bottom: 20)),
-                          );
-                        },
-                      ),
-                    ],
+                    secondChild: const SizedBox.shrink(),
+                    crossFadeState: filterStateModel.status != null &&
+                            filterStateModel.status != BookStatus.wantToRead
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 100),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -98,6 +103,7 @@ class FilterDialog extends StatelessWidget {
                           final bookListState = context.read<BookListModel>();
                           bookListState.reloadBooks();
                           filterStateModel.reset();
+                          Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 2,

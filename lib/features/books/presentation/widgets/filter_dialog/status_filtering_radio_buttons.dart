@@ -4,58 +4,47 @@ import 'package:book_tracker/features/books/presentation/state/filter_state_mode
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StatusFilteringRadioButtons extends StatefulWidget {
+class StatusFilteringRadioButtons extends StatelessWidget {
   const StatusFilteringRadioButtons({super.key});
 
-  BookStatus get status => BookStatus.reading;
-
-  @override
-  State<StatusFilteringRadioButtons> createState() =>
-      _StatusFilteringRadioButtonsState();
-}
-
-class _StatusFilteringRadioButtonsState
-    extends State<StatusFilteringRadioButtons> {
   @override
   Widget build(BuildContext context) {
     return Consumer<FilterStateModel>(
       builder: (context, filterStateModel, child) {
-        return 
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        statusRadioButton(BookStatus.reading, 'Reading', filterStateModel),
-        statusRadioButton(BookStatus.finished, 'Finished', filterStateModel),
-        statusRadioButton(BookStatus.wantToRead, 'Want to read', filterStateModel),
-      ],
-    ).addPadding(
-      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-    ); },
+        return Column(
+          children: [
+            statusRadioButton(null, 'All', filterStateModel),
+            statusRadioButton(
+                BookStatus.reading, 'Reading', filterStateModel),
+            statusRadioButton(
+                BookStatus.finished, 'Finished', filterStateModel),
+            statusRadioButton(
+                BookStatus.wantToRead, 'Want to read', filterStateModel),
+          ],
+        ).addPadding(
+          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        );
+      },
     );
   }
 
-  Widget statusRadioButton(
-      BookStatus targetStatus, String label, FilterStateModel filterStateModel) {
-
-    BookStatus status = filterStateModel.status;
-
+  Widget statusRadioButton(BookStatus? targetStatus, String label,
+      FilterStateModel filterStateModel) {
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () {
-        setState(() => status = targetStatus);
         filterStateModel.setStatus(targetStatus);
       },
       child: Theme(
         data: ThemeData.dark(),
         child: Row(
           children: [
-            Radio<BookStatus>(
+            Radio<BookStatus?>(
               value: targetStatus,
-              groupValue: status,
+              groupValue: filterStateModel.status,
               onChanged: (value) {
-                setState(() => status = value ?? BookStatus.reading);
-                filterStateModel.setStatus(targetStatus);
+                filterStateModel.setStatus(value);
               },
               activeColor: Colors.white,
             ),

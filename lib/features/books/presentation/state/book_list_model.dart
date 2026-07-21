@@ -9,67 +9,95 @@ import 'package:flutter/material.dart';
 class BookListModel extends ChangeNotifier {
   final DisplayBookListUseCase _displayBookListUseCase;
   final FilterBookListUseCase _filterBookListUseCase;
-  final List<Book> _books = [];
+  final List<Book> _allBooks = [];
+  final List<Book> _displayedBooks = [];
 
-  List<Book> get books => _books;
+  List<Book> get books => _displayedBooks;
   bool searching = false;
+  String? _currentSearchQuery;
+  FilterBookListParams? _currentFilterParams;
+
+  String? get isEmptyMessage {
+    if (_allBooks.isEmpty) return 'No books yet. Tap + to add one.';
+    if (_displayedBooks.isEmpty) return 'No books match your search or filter.';
+    return null;
+  }
 
   BookListModel(this._displayBookListUseCase, this._filterBookListUseCase) {
     _loadBooks();
   }
 
   void addBook(Book book) {
-    _books.add(book);
-    notifyListeners();
+    _allBooks.add(book);
+    _applyLocalFilters();
   }
 
   void removeBook(Book book) {
-    _books.remove(book);
-    notifyListeners();
+    _allBooks.remove(book);
+    _applyLocalFilters();
   }
 
   void updateBook(Book book) {
-    int index = _books.indexWhere((element) => element.id == book.id);
-    _books[index] = book;
-    notifyListeners();
+    int index = _allBooks.indexWhere((element) => element.id == book.id);
+    if (index != -1) {
+      _allBooks[index] = book;
+    }
+    _applyLocalFilters();
   }
 
   void reloadBooks() {
+    _currentSearchQuery = null;
+    _currentFilterParams = null;
+    searching = false;
     _loadBooks();
   }
 
-  void _loadBooks() async {
-    await _displayBookListUseCase().then((value) {
-      _books.clear();
-      _books.addAll(value);
-      notifyListeners();
-    });
+  Future<void> _loadBooks() async {
+    var books = await _displayBookListUseCase();
+    _allBooks.clear();
+    _allBooks.addAll(books);
+    _applyLocalFilters();
   }
 
   void filterList(FilterStateModel filterState) async {
-    await _filterBookListUseCase(
-            FilterBookListParams.fromFilterStateModel(filterState))
-        .then((value) {
-      _books.clear();
-      _books.addAll(value);
-      notifyListeners();
-    });
+    _currentFilterParams =
+        FilterBookListParams.fromFilterStateModel(filterState);
+    await _applyFilters();
+  }
+
+  Future<void> _applyFilters() async {
+    if (_currentFilterParams != null) {
+      var books = await _filterBookListUseCase(_currentFilterParams!);
+      _allBooks.clear();
+      _allBooks.addAll(books);
+    } else {
+      await _loadBooks();
+      return;
+    }
+    _applyLocalFilters();
+  }
+
+  void _applyLocalFilters() {
+    _displayedBooks.clear();
+    if (_currentSearchQuery != null && _currentSearchQuery!.isNotEmpty) {
+      var q = _currentSearchQuery!.toLowerCase();
+      _displayedBooks.addAll(_allBooks.where((b) =>
+          b.title.toLowerCase().contains(q) ||
+          b.author.toLowerCase().contains(q)));
+    } else {
+      _displayedBooks.addAll(_allBooks);
+    }
+    notifyListeners();
   }
 
   void searchBooks(String query) {
     if (query.isEmpty) {
-      _loadBooks();
-      return;
+      _currentSearchQuery = null;
+    } else {
+      _currentSearchQuery = query;
     }
-    var filteredBooks = _books
-        .where((element) =>
-            element.title.toLowerCase().contains(query.toLowerCase()) ||
-            element.author.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-    _books.clear();
-    _books.addAll(filteredBooks);
-    searching = true;
-    notifyListeners();
+    searching = _currentSearchQuery != null;
+    _applyLocalFilters();
   }
 
   void mockBooks() {
@@ -105,8 +133,8 @@ class BookListModel extends ChangeNotifier {
       'Aldous Huxley',
       'George Orwell',
     ];
-    _books.clear();
-    _books.addAll(
+    _allBooks.clear();
+    _allBooks.addAll(
       List.generate(
         50,
         (index) {
@@ -133,5 +161,6 @@ class BookListModel extends ChangeNotifier {
         },
       ),
     );
+    _applyLocalFilters();
   }
 }

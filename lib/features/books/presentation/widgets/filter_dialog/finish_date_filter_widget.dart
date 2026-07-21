@@ -9,20 +9,31 @@ class FinishDateFilterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final filterModel = context.watch<FilterStateModel>();
     return InkWell(
-      child: Text(
-        filterModel.getFormattedFinishDate(),
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w300,
-          fontSize: 17,
-        ),
-      ),
       onTap: () async {
         DateTime? date = await setUpDatePicker(filterModel, context);
         if (date != null) {
           filterModel.setFinishDate(date);
         }
       },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white24),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.calendar_today, color: Colors.white70, size: 16),
+            const SizedBox(width: 8),
+            const Spacer(),
+            Text(
+              filterModel.getFormattedFinishDate(),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
