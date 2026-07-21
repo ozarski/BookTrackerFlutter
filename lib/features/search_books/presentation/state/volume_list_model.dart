@@ -9,6 +9,9 @@ class VolumeListModel extends ChangeNotifier {
   List<GoogleBooksVolume> _volumes = [];
   List<GoogleBooksVolume> get volumes => _volumes;
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
@@ -18,6 +21,8 @@ class VolumeListModel extends ChangeNotifier {
 
   void loadVolumes(String query) async {
     _errorMessage = null;
+    _isLoading = true;
+    notifyListeners();
     try {
       _volumes = await _displayVolumesUseCase(query);
       if (_volumes.isEmpty) {
@@ -46,6 +51,7 @@ class VolumeListModel extends ChangeNotifier {
       _volumes = [];
       _errorMessage = 'Something went wrong.';
     }
+    _isLoading = false;
     notifyListeners();
   }
 }

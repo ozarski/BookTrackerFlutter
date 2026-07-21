@@ -68,7 +68,9 @@ class BookSearchScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: volumeListModel.volumes.isEmpty
+                    child: volumeListModel.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : volumeListModel.volumes.isEmpty
                         ? Center(
                             child: Text(
                               volumeListModel.errorMessage ?? 'Enter a search query above',
