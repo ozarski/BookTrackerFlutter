@@ -14,7 +14,7 @@ class GoogleBooksApiService {
         final response = await dio.get(
           baseUrl,
           queryParameters: {
-            'q': 'intitle:"${keywords.replaceAll('"', '')}"',
+            'q': keywords,
             'fields': 'items(volumeInfo(title, authors, imageLinks(thumbnail), pageCount))',
             'maxResults': 10,
             'key': apiKey,
