@@ -1,8 +1,10 @@
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
+import 'package:book_tracker/features/search_books/data/data_sources/google_books_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,18 +13,27 @@ class BookStateModel extends ChangeNotifier {
   final UpdateBookProgressUseCase updateBookProgressUseCase;
   final UpdateBookStatusUseCase updateBookStatusUseCase;
   final DeleteBookUseCase deleteBookUseCase;
+  final UpdateBookUseCase updateBookUseCase;
+  final GoogleBooksApiService googleBooksApiService;
   final int id;
 
   Book? book;
+  bool _isFetchingCover = false;
+  bool get isFetchingCover => _isFetchingCover;
+  String? _coverError;
+  String? get coverError => _coverError;
 
-  BookStateModel(
-      {required this.displayBookDetailsUseCase,
-      required this.updateBookProgressUseCase,
-      required this.updateBookStatusUseCase,
-      required this.deleteBookUseCase,
-      required this.id}) {
-        _getBookDetails(id);
-      }
+  BookStateModel({
+    required this.displayBookDetailsUseCase,
+    required this.updateBookProgressUseCase,
+    required this.updateBookStatusUseCase,
+    required this.deleteBookUseCase,
+    required this.updateBookUseCase,
+    required this.googleBooksApiService,
+    required this.id,
+  }) {
+    _getBookDetails(id);
+  }
 
   Future<void> _getBookDetails(int id) async {
     book = await displayBookDetailsUseCase(id);
@@ -57,7 +68,7 @@ class BookStateModel extends ChangeNotifier {
     return book?.finishDate;
   }
 
-  int getID(){
+  int getID() {
     return book?.id ?? 0;
   }
 
@@ -72,13 +83,15 @@ class BookStateModel extends ChangeNotifier {
         : '';
   }
 
-  String getEstimatedReadingTime(){
+  String getEstimatedReadingTime() {
     if (book == null) return '';
-    if(book?.pages == null || book?.pages == 0) return '';
-    if(book?.progress == null) return '';
-    if(book?.progress == 0) return '';
+    if (book?.pages == null || book?.pages == 0) return '';
+    if (book?.progress == null) return '';
+    if (book?.progress == 0) return '';
     final pagesToRead = book!.pages - book!.progress;
-    final readingTimeSoFar = book!.startDate != null ? DateTime.now().difference(book!.startDate!).inDays + 1 : Duration.zero.inDays + 1;
+    final readingTimeSoFar = book!.startDate != null
+        ? DateTime.now().difference(book!.startDate!).inDays + 1
+        : Duration.zero.inDays + 1;
     final days = (readingTimeSoFar / book!.progress * pagesToRead).ceil();
     return '$days days';
   }
@@ -115,5 +128,43 @@ class BookStateModel extends ChangeNotifier {
 
   void deleteBook() {
     deleteBookUseCase(id);
+  }
+
+  Future<void> fetchCover() async {
+    if (book == null || book!.title.isEmpty) return;
+    _isFetchingCover = true;
+    _coverError = null;
+    notifyListeners();
+
+    try {
+      var result = await googleBooksApiService.searchBooks(book!.title);
+      var items = result['items'] as List?;
+      if (items == null || items.isEmpty) {
+        _coverError = 'No cover found.';
+        return;
+      }
+      var thumbnail =
+          items[0]['volumeInfo']?['imageLinks']?['thumbnail'] as String?;
+      if (thumbnail == null || thumbnail.isEmpty) {
+        _coverError = 'No cover found.';
+        return;
+      }
+      var updatedBook = book!.copyWith(thumbnail: thumbnail);
+      await updateBookUseCase(updatedBook);
+      book = updatedBook;
+    } catch (e) {
+      _coverError = 'Failed to fetch cover.';
+    } finally {
+      _isFetchingCover = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeCover() async {
+    if (book == null) return;
+    var updatedBook = book!.copyWith(thumbnail: '');
+    await updateBookUseCase(updatedBook);
+    book = updatedBook;
+    notifyListeners();
   }
 }

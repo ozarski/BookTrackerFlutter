@@ -3,14 +3,17 @@ import 'package:book_tracker/core/widgets/book_cover_image.dart';
 import 'package:book_tracker/features/books/domain/entities/book.dart';
 import 'package:book_tracker/features/books/domain/usecases/delete_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/display_book_details.dart';
+import 'package:book_tracker/features/books/domain/usecases/update_book.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_progress.dart';
 import 'package:book_tracker/features/books/domain/usecases/update_book_status.dart';
 import 'package:book_tracker/features/books/presentation/state/book_list_model.dart';
 import 'package:book_tracker/features/books/presentation/state/book_state_model.dart';
 import 'package:book_tracker/core/utils/padding_extension.dart';
 import 'package:book_tracker/features/books/presentation/widgets/book_progress_slider.dart';
+import 'package:book_tracker/features/search_books/data/data_sources/google_books_api_service.dart';
 import 'package:book_tracker/features/statistics/presentation/state/stats_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class BookDetailsScreen extends StatelessWidget {
@@ -28,6 +31,10 @@ class BookDetailsScreen extends StatelessWidget {
         context.read<UpdateBookStatusUseCase>();
     final DeleteBookUseCase deleteBookUseCase =
         context.read<DeleteBookUseCase>();
+    final UpdateBookUseCase updateBookUseCase =
+        context.read<UpdateBookUseCase>();
+    final GoogleBooksApiService googleBooksApiService =
+        context.read<GoogleBooksApiService>();
 
     return ChangeNotifierProvider(
       create: (context) => BookStateModel(
@@ -35,6 +42,8 @@ class BookDetailsScreen extends StatelessWidget {
         updateBookProgressUseCase: updateBookProgressUseCase,
         updateBookStatusUseCase: updateBookStatusUseCase,
         deleteBookUseCase: deleteBookUseCase,
+        updateBookUseCase: updateBookUseCase,
+        googleBooksApiService: googleBooksApiService,
         id: bookID,
       ),
       child: Consumer<BookStateModel>(
@@ -88,7 +97,11 @@ class BookDetailsScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            bookCoverImage(bookModel),
+                            GestureDetector(
+                              onTap: () =>
+                                  _showCoverOptions(context, bookModel),
+                              child: bookCoverImage(bookModel),
+                            ),
                             basicBookInfo(bookModel, context),
                           ],
                         ),
@@ -122,6 +135,70 @@ class BookDetailsScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _showCoverOptions(BuildContext context, BookStateModel bookModel) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Book Cover',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ListTile(
+                  leading:
+                      Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
+                  title: const Text('Fetch new cover',
+                      style: TextStyle(color: Colors.white)),
+                  subtitle: const Text('Search Google Books for a cover image',
+                      style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await bookModel.fetchCover();
+                    if (bookModel.coverError != null) {
+                      Fluttertoast.showToast(msg: bookModel.coverError!);
+                    }
+                    if (bookModel.book != null) {
+                      context.read<BookListModel>().updateBook(bookModel.book!);
+                    }
+                  },
+                ),
+                if (bookModel.getThumbnail().isNotEmpty)
+                  ListTile(
+                    leading: const Icon(Icons.remove_circle, color: Colors.redAccent),
+                    title: const Text('Remove cover',
+                        style: TextStyle(color: Colors.white)),
+                    subtitle: const Text('Reset to default icon',
+                        style: TextStyle(color: Colors.white70, fontSize: 12)),
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      await bookModel.removeCover();
+                      if (bookModel.book != null) {
+                        context.read<BookListModel>().updateBook(bookModel.book!);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -199,7 +276,6 @@ class BookDetailsScreen extends StatelessWidget {
   }
 
   Widget finishedBookDetails(BookStateModel bookModel) {
-    // +1 because the start date is included in the reading time
     int readingTime = daysBetweenDates(
             bookModel.getStartDate()!, bookModel.getFinishDate()!) +
         1;
