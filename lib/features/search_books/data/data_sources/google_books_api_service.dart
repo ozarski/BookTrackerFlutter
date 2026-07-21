@@ -15,7 +15,7 @@ class GoogleBooksApiService {
           baseUrl,
           queryParameters: {
             'q': keywords,
-            'fields': 'items(volumeInfo(title, authors, imageLinks(thumbnail), pageCount))',
+            'fields': 'items(volumeInfo(title, authors, imageLinks(smallThumbnail, thumbnail), pageCount))',
             'maxResults': 10,
             'key': apiKey,
           },

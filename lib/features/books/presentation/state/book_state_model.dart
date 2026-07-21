@@ -143,8 +143,15 @@ class BookStateModel extends ChangeNotifier {
         _coverError = 'No cover found.';
         return;
       }
-      var thumbnail =
-          items[0]['volumeInfo']?['imageLinks']?['thumbnail'] as String?;
+      var imageLinks =
+          items[0]['volumeInfo']?['imageLinks'] as Map<String, dynamic>?;
+      var thumbnail = imageLinks?['thumbnail'] as String?
+          ?? imageLinks?['smallThumbnail'] as String?;
+      if (thumbnail != null) {
+        thumbnail = thumbnail
+            .replaceAll('zoom=1', 'zoom=0')
+            .replaceAll('zoom=5', 'zoom=0');
+      }
       if (thumbnail == null || thumbnail.isEmpty) {
         _coverError = 'No cover found.';
         return;
